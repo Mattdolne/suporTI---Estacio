@@ -3,7 +3,7 @@
 # ================================
 $Global:LogPath = "C:\registrolimpezapreventiva.txt"
 
-function Iniciar-Log($tipo) {
+function IniciarLog($tipo) {
     if (Test-Path $Global:LogPath) {
         Remove-Item $Global:LogPath -Force -ErrorAction SilentlyContinue
     }
@@ -20,11 +20,11 @@ function Iniciar-Log($tipo) {
     return $inicio
 }
 
-function Escrever-Resumo($descricao, $quantidade, $mb) {
+function EscreverResumo($descricao, $quantidade, $mb) {
     Add-Content $Global:LogPath ("{0}: OK ({1} arquivos, {2} MB)" -f $descricao, $quantidade, $mb)
 }
 
-function Finalizar-Log($inicio, $totalArquivos, $totalMB) {
+function FinalizarLog($inicio, $totalArquivos, $totalMB) {
     $fim = Get-Date
 
     Add-Content $Global:LogPath ""
@@ -36,7 +36,7 @@ function Finalizar-Log($inicio, $totalArquivos, $totalMB) {
 # ================================
 # FUNCAO AUXILIAR
 # ================================
-function Medir-Caminho($caminho) {
+function MedirCaminho($caminho) {
     $itens = Get-ChildItem $caminho -Recurse -Force -ErrorAction SilentlyContinue
 
     $quantidade = $itens.Count
@@ -55,34 +55,34 @@ function Medir-Caminho($caminho) {
 # ================================
 # LIMPEZA RAPIDA (BASE)
 # ================================
-function Executar-LimpezaRapida {
+function ExecutarLimpezaRapida {
     $totalArquivos = 0
     $totalBytes = 0
 
     # TEMP usuario
     $tempAtual = "$env:TEMP\*"
     if (Test-Path $tempAtual) {
-        $med = Medir-Caminho $tempAtual
+        $med = MedirCaminho $tempAtual
         Remove-Item $tempAtual -Recurse -Force -ErrorAction SilentlyContinue
 
         $totalArquivos += $med.Quantidade
         $totalBytes += $med.Bytes
 
         Write-Host "OK - TEMP usuario ($($med.Quantidade), $($med.MB) MB)"
-        Escrever-Resumo "TEMP usuario" $med.Quantidade $med.MB
+        EscreverResumo "TEMP usuario" $med.Quantidade $med.MB
     }
 
     # TEMP Windows
     $tempWin = "C:\Windows\Temp\*"
     if (Test-Path $tempWin) {
-        $med = Medir-Caminho $tempWin
+        $med = MedirCaminho $tempWin
         Remove-Item $tempWin -Recurse -Force -ErrorAction SilentlyContinue
 
         $totalArquivos += $med.Quantidade
         $totalBytes += $med.Bytes
 
         Write-Host "OK - TEMP Windows ($($med.Quantidade), $($med.MB) MB)"
-        Escrever-Resumo "TEMP Windows" $med.Quantidade $med.MB
+        EscreverResumo "TEMP Windows" $med.Quantidade $med.MB
     }
 
     # TEMP usuarios
@@ -97,7 +97,7 @@ function Executar-LimpezaRapida {
         $tempUser = "$($user.FullName)\AppData\Local\Temp\*"
 
         if (Test-Path $tempUser) {
-            $med = Medir-Caminho $tempUser
+            $med = MedirCaminho $tempUser
             Remove-Item $tempUser -Recurse -Force -ErrorAction SilentlyContinue
 
             $qtdUsuarios += $med.Quantidade
@@ -109,7 +109,7 @@ function Executar-LimpezaRapida {
     }
 
     Write-Host "OK - TEMP usuarios ($qtdUsuarios, $mbUsuarios MB)"
-    Escrever-Resumo "TEMP usuarios" $qtdUsuarios $mbUsuarios
+    EscreverResumo "TEMP usuarios" $qtdUsuarios $mbUsuarios
 
     # ================================
     # LIMPEZA LIXEIRA 
@@ -148,7 +148,7 @@ function Executar-LimpezaRapida {
         $mbLixeira = [math]::Round($bytesLixeira / 1MB, 2)
 
         Write-Host "OK - Lixeira limpa ($totalLixeira itens, $mbLixeira MB)"
-        Escrever-Resumo "Lixeira" $totalLixeira $mbLixeira
+        EscreverResumo "Lixeira" $totalLixeira $mbLixeira
 
         $totalArquivos += $totalLixeira
         $totalBytes += $bytesLixeira
@@ -163,12 +163,12 @@ function Executar-LimpezaRapida {
 # ================================
 # LIMPEZA RAPIDA (PUBLICA)
 # ================================
-function Limpeza-Rapida {
-    $inicio = Iniciar-Log "RAPIDA"
+function LimpezaRapida {
+    $inicio =  "RAPI-DA"
 
     Write-Host "Iniciando limpeza rapida..." -ForegroundColor Cyan
 
-    $res = Executar-LimpezaRapida
+    $res = ExecutarLimpezaRapida
 
     $totalMB = [math]::Round($res.Bytes / 1MB, 2)
 
@@ -177,13 +177,13 @@ function Limpeza-Rapida {
     Write-Host "Arquivos: $($res.Arquivos)"
     Write-Host "Espaco: $totalMB MB" -ForegroundColor Green
 
-    Finalizar-Log $inicio $res.Arquivos $totalMB
+    FinalizarLog $inicio $res.Arquivos $totalMB
 }
 
 # ================================
 # LIMPEZA COMPLETA
 # ================================
-function Limpeza-Completa {
+function LimpezaCompleta {
     Clear-Host
     Write-Host "ATENCAO: LIMPEZA COMPLETA" -ForegroundColor Red
     Write-Host "Remove arquivos pessoais"
@@ -195,10 +195,10 @@ function Limpeza-Completa {
         return
     }
 
-    $inicio = Iniciar-Log "COMPLETA"
+    $inicio =  "COMPLETA"
 
     Write-Host "Executando limpeza rapida..."
-    $resRapida = Executar-LimpezaRapida
+    $resRapida = ExecutarLimpezaRapida
 
     $totalArquivos = $resRapida.Arquivos
     $totalBytes = $resRapida.Bytes
@@ -214,7 +214,7 @@ function Limpeza-Completa {
             $caminho = "$($user.FullName)\$pasta\*"
 
             if (Test-Path $caminho) {
-                $med = Medir-Caminho $caminho
+                $med = MedirCaminho $caminho
                 Remove-Item $caminho -Recurse -Force -ErrorAction SilentlyContinue
 
                 $totalArquivos += $med.Quantidade
@@ -259,19 +259,19 @@ function Limpeza-Completa {
     Write-Host "Arquivos totais: $totalArquivos"
     Write-Host "Espaco total: $totalMB MB" -ForegroundColor Green
 
-    Finalizar-Log $inicio $totalArquivos $totalMB
+    FinalizarLog $inicio $totalArquivos $totalMB
 }
 
 # ================================
 # DESLIGAMENTO
 # ================================
-function Desligar-Maquina {
+function DesligarMaquina {
     Write-Host "Desligando maquina..."
     shutdown /s /t 5
 }
 
 # ================================
-# MENU LIMPEZA
+# MENULIMPEZA
 # ================================
 function Limpeza {
     while ($true) {
@@ -287,10 +287,10 @@ function Limpeza {
         $opcao = Read-Host "Escolha"
 
         switch ($opcao) {
-            "1" { Limpeza-Rapida }
-            "2" { Limpeza-Completa }
-            "3" { Limpeza-Rapida; Desligar-Maquina }
-            "4" { Limpeza-Completa; Desligar-Maquina }
+            "1" { LimpezaRapida }
+            "2" { LimpezaCompleta }
+            "3" { LimpezaRapida; DesligarMaquina }
+            "4" { LimpezaCompleta; DesligarMaquina }
             "0" { return }
             default { Write-Host "Opcao invalida" -ForegroundColor Yellow; Pause }
         }

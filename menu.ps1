@@ -66,12 +66,13 @@ if (-not (Get-Command Manutencao -ErrorAction SilentlyContinue)) {
 # ================================
 # MENU PRINCIPAL
 # ================================
-function Mostrar-Menu {
+function MostrarMenu {
     Clear-Host
     Write-Host "===================================================="
     Write-Host "   FERRAMENTA DE SUPORTE TI V.1.1 - CAMPUS RESENDE"
     Write-Host "===================================================="
     Write-Host ""
+    
     Write-Host "1 - Limpeza"
     Write-Host "2 - Auditoria"
     Write-Host "3 - Manutencao"
@@ -109,7 +110,7 @@ function Sobre {
 # LOOP PRINCIPAL
 # ================================
 while ($true) {
-    Mostrar-Menu
+    MostrarMenu
 
     $opcao = Read-Host "Escolha"
 

@@ -1,7 +1,7 @@
 # ================================
 # TESTE DE REDE
 # ================================
-function Teste-Rede {
+function TesteRede {
     Clear-Host
     Write-Host "===== TESTE DE REDE =====" -ForegroundColor Cyan
     Write-Host "Aguarde, executando diagnostico..."
@@ -53,7 +53,7 @@ function Teste-Rede {
 # ================================
 # CORRECAO DE ERROS DO SISTEMA
 # ================================
-function Sistema-Scan {
+function SistemaScan {
     Clear-Host
     Write-Host "===== CORRECAO DO SISTEMA (SFC / DISM) =====" -ForegroundColor Cyan
     Write-Host "ATENCAO: Este processo exige muita CPU/Disco e pode demorar (15-30 min)." -ForegroundColor Yellow
@@ -78,7 +78,7 @@ function Sistema-Scan {
 # ================================
 # CORRECAO DO WINDOWS UPDATE (RESET)
 # ================================
-function Corrigir-WindowsUpdate {
+function CorrigirWindowsUpdate {
     Clear-Host
     Write-Host "===== RESET DO WINDOWS UPDATE =====" -ForegroundColor Cyan
     Write-Host "Isso ira parar os servicos, limpar o cache corrompido e reiniciar."
@@ -109,7 +109,7 @@ function Corrigir-WindowsUpdate {
 # ================================
 # LIMPEZA DE UPDATES ANTIGOS
 # ================================
-function Limpar-WindowsUpdate {
+function LimparWindowsUpdate {
     Clear-Host
     Write-Host "===== LIMPEZA DE UPDATES =====" -ForegroundColor Cyan
     Write-Host "Remove instaladores antigos. Isso IMPEDIRA o rollback (desinstalacao) de atualizacoes recentes." -ForegroundColor Yellow
@@ -158,10 +158,10 @@ function Manutencao {
         $opcao = Read-Host "Escolha"
 
         switch ($opcao) {
-            "1" { Teste-Rede }
-            "2" { Sistema-Scan }
-            "3" { Corrigir-WindowsUpdate }
-            "4" { Limpar-WindowsUpdate }
+            "1" { TesteRede }
+            "2" { SistemaScan }
+            "3" { CorrigirWindowsUpdate }
+            "4" { LimparWindowsUpdate }
             "0" { return }
             default { Write-Host "Opcao invalida" -ForegroundColor Yellow; Pause }
         }

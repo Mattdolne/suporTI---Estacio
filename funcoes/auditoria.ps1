@@ -1,7 +1,7 @@
 # ================================
 # FUNCAO CORE: COLETAR INVENTARIO
 # ================================
-function Coletar-Inventario {
+function ColetarInventario {
 
     Write-Host "Coletando informacoes do sistema... Aguarde." -ForegroundColor Cyan
 
@@ -46,8 +46,8 @@ function Coletar-Inventario {
 # ================================
 # RELATORIO: TERMINAL
 # ================================
-function Auditoria-Terminal {
-    $dados = Coletar-Inventario
+function AuditoriaTerminal {
+    $dados = ColetarInventario
     Clear-Host
 
     Write-Host "========================================="
@@ -78,8 +78,8 @@ function Auditoria-Terminal {
 # ================================
 # RELATORIO: CSV
 # ================================
-function Auditoria-CSV {
-    $dados = Coletar-Inventario
+function AuditoriaCSV {
+    $dados = ColetarInventario
     $caminho = "$([Environment]::GetFolderPath('Desktop'))\Auditoria_$($env:COMPUTERNAME).csv"
 
     try {
@@ -94,8 +94,8 @@ function Auditoria-CSV {
 # ================================
 # RELATORIO: XML
 # ================================
-function Auditoria-XML {
-    $dados = Coletar-Inventario
+function AuditoriaXML {
+    $dados = ColetarInventario
     $caminho = "$([Environment]::GetFolderPath('Desktop'))\Auditoria_$($env:COMPUTERNAME).xml"
 
     try {
@@ -110,8 +110,8 @@ function Auditoria-XML {
 # ================================
 # RELATORIO: TXT
 # ================================
-function Auditoria-TXT {
-    $dados = Coletar-Inventario
+function AuditoriaTXT {
+    $dados = ColetarInventario
     $caminho = "$([Environment]::GetFolderPath('Desktop'))\Auditoria_$($env:COMPUTERNAME).txt"
 
     try {
@@ -154,7 +154,7 @@ function Auditoria {
     Menu-Auditoria
 }
 
-function Menu-Auditoria {
+function MenuAuditoria {
     while ($true) {
         Clear-Host
         Write-Host "===== AUDITORIA ====="
@@ -168,10 +168,10 @@ function Menu-Auditoria {
         $opcao = Read-Host "Escolha"
 
         switch ($opcao) {
-            "1" { Auditoria-Terminal }
-            "2" { Auditoria-CSV }
-            "3" { Auditoria-XML }
-            "4" { Auditoria-TXT }
+            "1" { AuditoriaTerminal }
+            "2" { AuditoriaCSV }
+            "3" { AuditoriaXML }
+            "4" { AuditoriaTXT }
             "0" { return }
             default { Write-Host "Opcao invalida" -ForegroundColor Yellow; Pause }
         }
