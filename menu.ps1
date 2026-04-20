@@ -66,18 +66,16 @@ if (-not (Get-Command Manutencao -ErrorAction SilentlyContinue)) {
 # ================================
 # MENU PRINCIPAL
 # ================================
-function MostrarMenu {
+function Mostrar-Menu {
     Clear-Host
     Write-Host "===================================================="
     Write-Host "   FERRAMENTA DE SUPORTE TI V.1.1 - CAMPUS RESENDE"
     Write-Host "===================================================="
     Write-Host ""
-    
     Write-Host "1 - Limpeza"
     Write-Host "2 - Auditoria"
     Write-Host "3 - Manutencao"
     Write-Host "4 - Sobre"
-    Write-Host "0 - Sair"
     Write-Host ""
 }
 
@@ -109,8 +107,10 @@ function Sobre {
 # ================================
 # LOOP PRINCIPAL
 # ================================
-while ($true) {
-    MostrarMenu
+$continuar = $true
+
+while ($continuar) {
+    Mostrar-Menu
 
     $opcao = Read-Host "Escolha"
 
@@ -136,9 +136,7 @@ while ($true) {
         }
         "4" {
             Sobre
-        }
-        "0" { 
-            break 
+        
         }
         default { 
             Write-Host "Opcao invalida" -ForegroundColor Yellow

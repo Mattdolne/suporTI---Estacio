@@ -1,7 +1,7 @@
 # ================================
 # TESTE DE REDE
 # ================================
-function TesteRede {
+function Teste-Rede {
     Clear-Host
     Write-Host "===== TESTE DE REDE =====" -ForegroundColor Cyan
     Write-Host "Aguarde, executando diagnostico..."
@@ -30,6 +30,7 @@ function TesteRede {
     $portais = @(
         @{ Nome = "SIA"; Url = "https://sia.estacio.br/" }
         @{ Nome = "SAVA"; Url = "https://estudante.estacio.br/" }
+        @{ Nome = "ADP"; Url = "https://expert.cloud.brasil.adp.com/expert2/v5/" }
     )
 
     foreach ($portal in $portais) {
@@ -53,7 +54,7 @@ function TesteRede {
 # ================================
 # CORRECAO DE ERROS DO SISTEMA
 # ================================
-function SistemaScan {
+function Sistema-Scan {
     Clear-Host
     Write-Host "===== CORRECAO DO SISTEMA (SFC / DISM) =====" -ForegroundColor Cyan
     Write-Host "ATENCAO: Este processo exige muita CPU/Disco e pode demorar (15-30 min)." -ForegroundColor Yellow
@@ -68,8 +69,14 @@ function SistemaScan {
     Write-Host "`n[1/2] Executando SFC (System File Checker)..."
     sfc /scannow
 
-    Write-Host "`n[2/2] Executando DISM (RestoreHealth)..."
-    DISM /Online /Cleanup-Image /RestoreHealth
+    Write-Host "`n[2/2] Executando reparos..."
+    Repair-WindowsImage -Online -RestoreHealth
+
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "Reparo concluído com sucesso!" -ForegroundColor Green
+        } else {
+            Write-Error "O reparo falhou com código: $($LASTEXITCODE.ExitCode)"
+        } 
 
     Write-Host "`nManutencao de sistema finalizada." -ForegroundColor Green
     Pause
@@ -78,7 +85,7 @@ function SistemaScan {
 # ================================
 # CORRECAO DO WINDOWS UPDATE (RESET)
 # ================================
-function CorrigirWindowsUpdate {
+function Corrigir-WindowsUpdate {
     Clear-Host
     Write-Host "===== RESET DO WINDOWS UPDATE =====" -ForegroundColor Cyan
     Write-Host "Isso ira parar os servicos, limpar o cache corrompido e reiniciar."
@@ -109,7 +116,7 @@ function CorrigirWindowsUpdate {
 # ================================
 # LIMPEZA DE UPDATES ANTIGOS
 # ================================
-function LimparWindowsUpdate {
+function Limpar-WindowsUpdate {
     Clear-Host
     Write-Host "===== LIMPEZA DE UPDATES =====" -ForegroundColor Cyan
     Write-Host "Remove instaladores antigos. Isso IMPEDIRA o rollback (desinstalacao) de atualizacoes recentes." -ForegroundColor Yellow
@@ -158,10 +165,10 @@ function Manutencao {
         $opcao = Read-Host "Escolha"
 
         switch ($opcao) {
-            "1" { TesteRede }
-            "2" { SistemaScan }
-            "3" { CorrigirWindowsUpdate }
-            "4" { LimparWindowsUpdate }
+            "1" { Teste-Rede }
+            "2" { Sistema-Scan }
+            "3" { Corrigir-WindowsUpdate }
+            "4" { Limpar-WindowsUpdate }
             "0" { return }
             default { Write-Host "Opcao invalida" -ForegroundColor Yellow; Pause }
         }
