@@ -2,7 +2,7 @@
 
 ![PowerShell](https://img.shields.io/badge/PowerShell-%E2%89%A55.1-blue?logo=powershell)
 ![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D6?logo=windows)
-![Versão](https://img.shields.io/badge/Vers%C3%A3o-1.1-brightgreen)
+![Versão](https://img.shields.io/badge/Vers%C3%A3o-1.2-brightgreen)
 
 Um "canivete suíço" em PowerShell desenvolvido para otimizar, automatizar e padronizar os atendimentos de suporte técnico de Nível 1 no ambiente acadêmico.
 
