@@ -161,6 +161,52 @@ function ListarUsuarioLocal {
 }
 
 # ================================
+# REINICIAR ADAPTADOR DE REDE
+# ================================
+function Reiniciar-AdaptadorRede {
+    Clear-Host
+    Write-Host "===== REINICIAR ADAPTADOR DE REDE =====" -ForegroundColor Cyan
+    
+    # 1. Busca todos os adaptadores ativos (Up)
+    $adaptadores = Get-NetAdapter | Where-Object { $_.Status -eq "Up" }
+    
+    if ($adaptadores.Count -eq 0) {
+        Write-Host "Nenhum adaptador de rede ativo encontrado." -ForegroundColor Red
+        Pause
+        return
+    }
+
+    # 2. Lista os adaptadores com um índice numérico
+    Write-Host "Selecione o adaptador para reiniciar:" -ForegroundColor Yellow
+    for ($i = 0; $i -lt $adaptadores.Count; $i++) {
+        Write-Host "[$i] $($adaptadores[$i].Name) - $($adaptadores[$i].InterfaceDescription)"
+    }
+    Write-Host "[S] Sair" -ForegroundColor Gray
+
+    # 3. Captura a escolha do usuário
+    $escolha = Read-Host "`nDigite o número da opção"
+
+    if ($escolha -eq "S") { return }
+
+    # 4. Valida se o número digitado é válido
+    if ($escolha -ge 0 -and $escolha -lt $adaptadores.Count) {
+        $adaptadorSelecionado = $adaptadores[$escolha]
+        
+        Write-Host "`nReiniciando $($adaptadorSelecionado.Name)..." -ForegroundColor Yellow
+        
+        # O processo de desligar e ligar a interface
+        Disable-NetAdapter -Name $adaptadorSelecionado.Name -Confirm:$false
+        Start-Sleep -Seconds 2 # Pequena pausa para garantir que o sistema processou o comando
+        Enable-NetAdapter -Name $adaptadorSelecionado.Name -Confirm:$false
+        
+        Write-Host "Adaptador reiniciado com sucesso!" -ForegroundColor Green
+    } else {
+        Write-Host "Opção inválida!" -ForegroundColor Red
+    }
+    Pause
+}
+
+# ================================
 # MENU MANUTENCAO
 # ================================
 function Manutencao {
@@ -172,6 +218,7 @@ function Manutencao {
         Write-Host "3 - Correcao do Windows Update (Reset total)"
         Write-Host "4 - Limpeza de updates antigos (Libera espaco)"
         Write-Host "5 - Listar contas de usuário local"
+        Write-Host "6 - Reiniciar adaptador de rede"
         Write-Host "0 - Voltar"
         Write-Host ""
 
@@ -183,6 +230,7 @@ function Manutencao {
             "3" { Corrigir-WindowsUpdate }
             "4" { Limpar-WindowsUpdate }
             "5" { ListarUsuarioLocal }
+            "6" { Reiniciar-AdaptadorRede }
             "0" { return }
             default { Write-Host "Opcao invalida" -ForegroundColor Yellow; Pause }
         }

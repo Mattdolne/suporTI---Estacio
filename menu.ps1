@@ -68,9 +68,18 @@ if (-not (Get-Command Manutencao -ErrorAction SilentlyContinue)) {
 # ================================
 function Mostrar-Menu {
     Clear-Host
-    Write-Host "===================================================="
-    Write-Host "   FERRAMENTA DE SUPORTE TI V.1.1 - CAMPUS RESENDE"
-    Write-Host "===================================================="
+    Clear-Host
+    Write-Host @"
+     ____                        _____ ___ 
+    / ___| _   _ _ __   ___  _ _|_   _|_ _|
+    \___ \| | | | '_ \ / _ \| '__|| |  | | 
+     ___) | |_| | |_) | (_) | |   | |  | | 
+    |____/ \__,_| .__/ \___/|_|   |_| |___|
+                |_|   
+                   <Estacio Resende - 2026>
+                                     
+"@ -ForegroundColor Cyan
+    Write-Host "===================================================" -ForegroundColor DarkCyan
     Write-Host ""
     Write-Host "1 - Limpeza"
     Write-Host "2 - Auditoria"
@@ -91,8 +100,8 @@ function Sobre {
     
     Write-Host "Desenvolvido por Mattheus Macedo               /\       " -ForegroundColor Cyan
     Write-Host "em Estacio de Sa - Resende                   / || \     " -ForegroundColor Cyan
-    Write-Host "Versao: 1.1                                /___||___\   " -ForegroundColor Cyan
-    Write-Host "Data da ultima atualizacao: 09/04/2026   /     ||     \ " -ForegroundColor Cyan
+    Write-Host "Versao: 1.2                                /___||___\   " -ForegroundColor Cyan
+    Write-Host "Data da ultima atualizacao: 22/04/2026   /     ||     \ " -ForegroundColor Cyan
     Write-Host "                                        ================" -ForegroundColor Cyan
     Write-Host "                                         \     ||     / " -ForegroundColor Cyan
     Write-Host "                                           \___||___/   " -ForegroundColor Cyan
