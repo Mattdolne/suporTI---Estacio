@@ -247,6 +247,35 @@ function Verificar-Disco {
 }
 
 # ================================
+# FORÇAR GPOs E TESTE DE DOMÍNIO
+# ================================
+function Atualizar-GPOs {
+    Clear-Host
+    Write-Host "====== ATUALIZAR E VERIFICAR POLÍTICAS DE GRUPO (GPO) ======" -ForegroundColor Cyan
+    
+    Write-Host "`n[1/2] Iniciando atualização de GPOs..." -ForegroundColor Yellow
+    gpupdate /force
+
+    Write-Host "`n[2/2] Testando relação de confiança com o domínio..." -ForegroundColor Yellow
+    
+    try {
+        # O -ErrorAction Stop força qualquer aviso a cair no bloco catch abaixo
+        $statusDominio = Test-ComputerSecureChannel -ErrorAction Stop
+        
+        if ($statusDominio) {
+            Write-Host "Status: CONECTADO e CONFIÁVEL (True)" -ForegroundColor Green
+        } else {
+            Write-Host "Status: FALHA NA CONFIANÇA (False)" -ForegroundColor Red
+        }
+    } catch {
+        Write-Host "Erro: Não foi possível testar o domínio (A máquina não está no domínio ou está sem rede)." -ForegroundColor DarkGray
+    }
+
+    Write-Host "`nAtualizações e testes concluídos!" -ForegroundColor Green
+    Pause
+}
+
+# ================================
 # MENU MANUTENCAO
 # ================================
 function Manutencao {
@@ -260,6 +289,7 @@ function Manutencao {
         Write-Host "5 - Listar contas de usuário local"
         Write-Host "6 - Reiniciar adaptador de rede"
         Write-Host "7 - Verificação e correção de erros de disco"
+        Write-Host "8 - Atualizar políticas de grupo - GPOs"
         Write-Host "0 - Voltar"
         Write-Host ""
 
@@ -273,6 +303,7 @@ function Manutencao {
             "5" { ListarUsuarioLocal }
             "6" { Reiniciar-AdaptadorRede }
             "7" { Verificar-Disco }
+            "8" { Atualizar-GPOs }
             "0" { return }
             default { Write-Host "Opcao invalida" -ForegroundColor Yellow; Pause }
         }
