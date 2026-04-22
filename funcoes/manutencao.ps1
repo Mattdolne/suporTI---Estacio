@@ -207,40 +207,6 @@ function Reiniciar-AdaptadorRede {
 }
 
 # ================================
-# ATIVAR WINDOWS
-# ================================
-
-function Ativar-Windows {
-    Clear-Host
-    Write-Host "===== ATIVAÇÃO DO WINDOWS =====" -ForegroundColor Cyan
-    Write-Host "Este processo pode levar alguns segundos..." -ForegroundColor Yellow
-    Write-Host ""
-
-    $confirmacao = Read-Host "Deseja prosseguir com a troca da chave de ativacao? (S/N)"
-    if ($confirmacao -ne "S") {
-        Write-Host "Cancelado."
-        return
-    }
-
-    # Caminho do slmgr
-    $slmgr = "$env:windir\System32\slmgr.vbs"
-
-    Write-Host "`n[1/3] Desinstalando a chave atual (/upk)..."
-    cscript.exe //nologo $slmgr /upk | Out-Null
-
-    Write-Host "[2/3] Instalando a nova chave (/ipk)..."
-    cscript.exe //nologo $slmgr /ipk "9NK44-QF26M-G9WX2-VJJVH-7QWXM" | Out-Null
-
-    Write-Host "[3/3] Solicitando ativacao nos servidores da Microsoft (/ato)..."
-    # Aqui não usamos Out-Null para que você possa ver a resposta do servidor (se deu certo ou falhou)
-    $resultado = cscript.exe //nologo $slmgr /ato
-    Write-Host $resultado -ForegroundColor Green
-
-    Write-Host "`nProcesso de ativacao finalizado." -ForegroundColor Cyan
-    Pause
-}
-
-# ================================
 # MENU MANUTENCAO
 # ================================
 function Manutencao {
@@ -253,7 +219,6 @@ function Manutencao {
         Write-Host "4 - Limpeza de updates antigos (Libera espaco)"
         Write-Host "5 - Listar contas de usuário local"
         Write-Host "6 - Reiniciar adaptador de rede"
-        Write-Host "7 - Ativar Windows"
         Write-Host "0 - Voltar"
         Write-Host ""
 
@@ -266,7 +231,6 @@ function Manutencao {
             "4" { Limpar-WindowsUpdate }
             "5" { ListarUsuarioLocal }
             "6" { Reiniciar-AdaptadorRede }
-            "7" { Ativar-Windows }
             "0" { return }
             default { Write-Host "Opcao invalida" -ForegroundColor Yellow; Pause }
         }
