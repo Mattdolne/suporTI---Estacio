@@ -70,6 +70,8 @@ Solução rápida para os problemas mais comuns de infraestrutura e SO.
 
     Verificar e corrigir erros de disco.
 
+    Atualizar e verificar políticas de grupo - GPOs
+
 ⚙️ Pré-requisitos e Execução
 
     O script foi projetado para rodar nativamente no Windows 10 e Windows 11.
