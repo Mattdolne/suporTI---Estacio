@@ -66,6 +66,10 @@ Solução rápida para os problemas mais comuns de infraestrutura e SO.
 
     Listar Todos os Usuários Locais do Dispositivo: Lista usuários locais e informações básicas sobre eles.
 
+    Reiniciar adaptador de rede.
+
+    Verificar e corrigir erros de disco.
+
 ⚙️ Pré-requisitos e Execução
 
     O script foi projetado para rodar nativamente no Windows 10 e Windows 11.
