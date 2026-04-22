@@ -149,12 +149,38 @@ function Limpar-WindowsUpdate {
 }
 
 # ================================
-# LISTAR USUÁRIOS LOCAIS
+# RESET DE SENHA DE USUÁRIO LOCAL
 # ================================
-function ListarUsuarioLocal {
-    Write-Host "Listando usuários locais cadastrados nesta estação: " -ForegroundColor Cyan
+function Resetar-SenhaUsuario {
+    Clear-Host
+    Write-Host "====== RESET DE SENHA LOCAL ======" -ForegroundColor Cyan
+    Write-Host "Altera a senha de qualquer usuário sem precisar da senha atual.`n" -ForegroundColor Yellow
+
+    # Lista os usuários existentes para facilitar a escolha
+    Write-Host "Usuários locais disponíveis:" -ForegroundColor Gray
+    Get-LocalUser | Select-Object Name, FullName, Enabled | Format-Table -AutoSize
+
+    $nomeUsuario = Read-Host "Digite o nome exato do usuário (ou '0' para cancelar)"
     
-    Get-LocalUser | Select-Object Name, Enabled, LastLogon, Description | Format-Table -AutoSize
+    if ($nomeUsuario -eq "0" -or [string]::IsNullOrWhiteSpace($nomeUsuario)) {
+        Write-Host "Operação cancelada." -ForegroundColor Gray
+        return
+    }
+
+    # O parâmetro -AsSecureString oculta a senha enquanto você digita (mostra asteriscos)
+    $novaSenha = Read-Host "Digite a NOVA senha para o usuário '$nomeUsuario'" -AsSecureString
+
+    Write-Host "`nAplicando nova senha..." -ForegroundColor Yellow
+
+    try {
+        # O Set-LocalUser exige que a senha seja passada como SecureString, o que já fizemos acima
+        Set-LocalUser -Name $nomeUsuario -Password $novaSenha -ErrorAction Stop
+        
+        Write-Host "[OK] Senha alterada com sucesso!" -ForegroundColor Green
+    } catch {
+        Write-Host "[ERRO] Não foi possível alterar a senha." -ForegroundColor Red
+        Write-Host "Motivo: $_" -ForegroundColor DarkGray
+    }
 
     Write-Host ""
     Pause
@@ -286,7 +312,7 @@ function Manutencao {
         Write-Host "2 - Correcao de erros do sistema (SFC e DISM)"
         Write-Host "3 - Correcao do Windows Update (Reset total)"
         Write-Host "4 - Limpeza de updates antigos (Libera espaco)"
-        Write-Host "5 - Listar contas de usuário local"
+        Write-Host "5 - Alterar senha de contas de usuário local"
         Write-Host "6 - Reiniciar adaptador de rede"
         Write-Host "7 - Verificação e correção de erros de disco"
         Write-Host "8 - Atualizar políticas de grupo - GPOs"
@@ -300,7 +326,7 @@ function Manutencao {
             "2" { Sistema-Scan }
             "3" { Corrigir-WindowsUpdate }
             "4" { Limpar-WindowsUpdate }
-            "5" { ListarUsuarioLocal }
+            "5" { Resetar-SenhaUsuario }
             "6" { Reiniciar-AdaptadorRede }
             "7" { Verificar-Disco }
             "8" { Atualizar-GPOs }
