@@ -149,6 +149,18 @@ function Limpar-WindowsUpdate {
 }
 
 # ================================
+# LISTAR USUÁRIOS LOCAIS
+# ================================
+function ListarUsuarioLocal {
+    Write-Host "Listando usuários locais cadastrados nesta estação: " -ForegroundColor Cyan
+    
+    Get-LocalUser | Select-Object Name, Enabled, LastLogon, Description | Format-Table -AutoSize
+
+    Write-Host ""
+    Pause
+}
+
+# ================================
 # MENU MANUTENCAO
 # ================================
 function Manutencao {
@@ -159,6 +171,7 @@ function Manutencao {
         Write-Host "2 - Correcao de erros do sistema (SFC e DISM)"
         Write-Host "3 - Correcao do Windows Update (Reset total)"
         Write-Host "4 - Limpeza de updates antigos (Libera espaco)"
+        Write-Host "5 - Listar contas de usuário local"
         Write-Host "0 - Voltar"
         Write-Host ""
 
@@ -169,6 +182,7 @@ function Manutencao {
             "2" { Sistema-Scan }
             "3" { Corrigir-WindowsUpdate }
             "4" { Limpar-WindowsUpdate }
+            "5" { ListarUsuarioLocal }
             "0" { return }
             default { Write-Host "Opcao invalida" -ForegroundColor Yellow; Pause }
         }
