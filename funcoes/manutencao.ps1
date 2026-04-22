@@ -207,6 +207,46 @@ function Reiniciar-AdaptadorRede {
 }
 
 # ================================
+# VERIFICACAO DE ERROS NO DISCO
+# ================================
+function Verificar-Disco {
+    while ($true) {
+        Clear-Host
+        Write-Host "===== VERIFICACAO DE DISCO (CHKDSK) =====" -ForegroundColor Cyan
+        Write-Host "Identifica e corrige setores defeituosos e erros no sistema de arquivos."
+        Write-Host ""
+        Write-Host "1 - Verificacao rapida (Somente leitura, nao reinicia a maquina)"
+        Write-Host "2 - Agendar correcao profunda (Exige reiniciar a maquina)"
+        Write-Host "0 - Voltar"
+        Write-Host ""
+
+        $opcaoDisco = Read-Host "Escolha"
+
+        switch ($opcaoDisco) {
+            "1" {
+                Write-Host "`nExecutando leitura do disco C:... (Isso pode levar alguns minutos)" -ForegroundColor Yellow
+                chkdsk C:
+                Write-Host "`nVerificacao rapida concluida!" -ForegroundColor Green
+                Pause
+            }
+            "2" {
+                Write-Host "`nAgendando correcao profunda para o disco C:..." -ForegroundColor Yellow
+                Write-Host "O processo ira corrigir erros e recuperar setores defeituosos no proximo boot." -ForegroundColor Red
+                Write-Host ""
+                
+                # O comando "echo y" responde "Sim" automaticamente quando o chkdsk pergunta se quer agendar
+                cmd.exe /c "echo y | chkdsk C: /f /r"
+                
+                Write-Host "`nAgendamento concluido. Reinicie a maquina para iniciar o reparo." -ForegroundColor Green
+                Pause
+            }
+            "0" { return }
+            default { Write-Host "Opcao invalida" -ForegroundColor Yellow; Pause }
+        }
+    }
+}
+
+# ================================
 # MENU MANUTENCAO
 # ================================
 function Manutencao {
@@ -219,6 +259,7 @@ function Manutencao {
         Write-Host "4 - Limpeza de updates antigos (Libera espaco)"
         Write-Host "5 - Listar contas de usuário local"
         Write-Host "6 - Reiniciar adaptador de rede"
+        Write-Host "7 - Verificação e correção de erros de disco"
         Write-Host "0 - Voltar"
         Write-Host ""
 
@@ -231,6 +272,7 @@ function Manutencao {
             "4" { Limpar-WindowsUpdate }
             "5" { ListarUsuarioLocal }
             "6" { Reiniciar-AdaptadorRede }
+            "7" { Verificar-Disco }
             "0" { return }
             default { Write-Host "Opcao invalida" -ForegroundColor Yellow; Pause }
         }
