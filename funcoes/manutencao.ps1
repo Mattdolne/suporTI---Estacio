@@ -209,9 +209,7 @@ function Reiniciar-AdaptadorRede {
 # ================================
 # ATIVAR WINDOWS
 # ================================
-# ================================
-# ATIVAÇÃO DO WINDOWS
-# ================================
+
 function Ativar-Windows {
     Clear-Host
     Write-Host "===== ATIVAÇÃO DO WINDOWS =====" -ForegroundColor Cyan
