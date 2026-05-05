@@ -73,9 +73,9 @@ function Sistema-Scan {
     Repair-WindowsImage -Online -RestoreHealth
 
         if ($LASTEXITCODE -eq 0) {
-            Write-Host "Reparo concluído com sucesso!" -ForegroundColor Green
+            Write-Host "Reparo concluï¿½do com sucesso!" -ForegroundColor Green
         } else {
-            Write-Error "O reparo falhou com código: $($LASTEXITCODE.ExitCode)"
+            Write-Error "O reparo falhou com cï¿½digo: $($LASTEXITCODE.ExitCode)"
         } 
 
     Write-Host "`nManutencao de sistema finalizada." -ForegroundColor Green
@@ -149,36 +149,36 @@ function Limpar-WindowsUpdate {
 }
 
 # ================================
-# RESET DE SENHA DE USUÁRIO LOCAL
+# RESET DE SENHA DE USUï¿½RIO LOCAL
 # ================================
 function Resetar-SenhaUsuario {
     Clear-Host
     Write-Host "====== RESET DE SENHA LOCAL ======" -ForegroundColor Cyan
-    Write-Host "Altera a senha de qualquer usuário sem precisar da senha atual.`n" -ForegroundColor Yellow
+    Write-Host "Altera a senha de qualquer usuï¿½rio sem precisar da senha atual.`n" -ForegroundColor Yellow
 
-    # Lista os usuários existentes para facilitar a escolha
-    Write-Host "Usuários locais disponíveis:" -ForegroundColor Gray
+    # Lista os usuï¿½rios existentes para facilitar a escolha
+    Write-Host "Usuï¿½rios locais disponï¿½veis:" -ForegroundColor Gray
     Get-LocalUser | Select-Object Name, FullName, Enabled | Format-Table -AutoSize
 
-    $nomeUsuario = Read-Host "Digite o nome exato do usuário (ou '0' para cancelar)"
+    $nomeUsuario = Read-Host "Digite o nome exato do usuï¿½rio (ou '0' para cancelar)"
     
     if ($nomeUsuario -eq "0" -or [string]::IsNullOrWhiteSpace($nomeUsuario)) {
-        Write-Host "Operação cancelada." -ForegroundColor Gray
+        Write-Host "Operaï¿½ï¿½o cancelada." -ForegroundColor Gray
         return
     }
 
-    # O parâmetro -AsSecureString oculta a senha enquanto você digita (mostra asteriscos)
-    $novaSenha = Read-Host "Digite a NOVA senha para o usuário '$nomeUsuario'" -AsSecureString
+    # O parï¿½metro -AsSecureString oculta a senha enquanto vocï¿½ digita (mostra asteriscos)
+    $novaSenha = Read-Host "Digite a NOVA senha para o usuï¿½rio '$nomeUsuario'" -AsSecureString
 
     Write-Host "`nAplicando nova senha..." -ForegroundColor Yellow
 
     try {
-        # O Set-LocalUser exige que a senha seja passada como SecureString, o que já fizemos acima
+        # O Set-LocalUser exige que a senha seja passada como SecureString, o que jï¿½ fizemos acima
         Set-LocalUser -Name $nomeUsuario -Password $novaSenha -ErrorAction Stop
         
         Write-Host "[OK] Senha alterada com sucesso!" -ForegroundColor Green
     } catch {
-        Write-Host "[ERRO] Não foi possível alterar a senha." -ForegroundColor Red
+        Write-Host "[ERRO] Nï¿½o foi possï¿½vel alterar a senha." -ForegroundColor Red
         Write-Host "Motivo: $_" -ForegroundColor DarkGray
     }
 
@@ -202,19 +202,19 @@ function Reiniciar-AdaptadorRede {
         return
     }
 
-    # 2. Lista os adaptadores com um índice numérico
+    # 2. Lista os adaptadores com um ï¿½ndice numï¿½rico
     Write-Host "Selecione o adaptador para reiniciar:" -ForegroundColor Yellow
     for ($i = 0; $i -lt $adaptadores.Count; $i++) {
         Write-Host "[$i] $($adaptadores[$i].Name) - $($adaptadores[$i].InterfaceDescription)"
     }
     Write-Host "[S] Sair" -ForegroundColor Gray
 
-    # 3. Captura a escolha do usuário
-    $escolha = Read-Host "`nDigite o número da opção"
+    # 3. Captura a escolha do usuï¿½rio
+    $escolha = Read-Host "`nDigite o nï¿½mero da opï¿½ï¿½o"
 
     if ($escolha -eq "S") { return }
 
-    # 4. Valida se o número digitado é válido
+    # 4. Valida se o nï¿½mero digitado ï¿½ vï¿½lido
     if ($escolha -ge 0 -and $escolha -lt $adaptadores.Count) {
         $adaptadorSelecionado = $adaptadores[$escolha]
         
@@ -227,7 +227,7 @@ function Reiniciar-AdaptadorRede {
         
         Write-Host "Adaptador reiniciado com sucesso!" -ForegroundColor Green
     } else {
-        Write-Host "Opção inválida!" -ForegroundColor Red
+        Write-Host "Opï¿½ï¿½o invï¿½lida!" -ForegroundColor Red
     }
     Pause
 }
@@ -273,31 +273,31 @@ function Verificar-Disco {
 }
 
 # ================================
-# FORÇAR GPOs E TESTE DE DOMÍNIO
+# FORï¿½AR GPOs E TESTE DE DOMï¿½NIO
 # ================================
 function Atualizar-GPOs {
     Clear-Host
-    Write-Host "====== ATUALIZAR E VERIFICAR POLÍTICAS DE GRUPO (GPO) ======" -ForegroundColor Cyan
+    Write-Host "====== ATUALIZAR E VERIFICAR POLï¿½TICAS DE GRUPO (GPO) ======" -ForegroundColor Cyan
     
-    Write-Host "`n[1/2] Iniciando atualização de GPOs..." -ForegroundColor Yellow
+    Write-Host "`n[1/2] Iniciando atualizaï¿½ï¿½o de GPOs..." -ForegroundColor Yellow
     gpupdate /force
 
-    Write-Host "`n[2/2] Testando relação de confiança com o domínio..." -ForegroundColor Yellow
+    Write-Host "`n[2/2] Testando relaï¿½ï¿½o de confianï¿½a com o domï¿½nio..." -ForegroundColor Yellow
     
     try {
-        # O -ErrorAction Stop força qualquer aviso a cair no bloco catch abaixo
+        # O -ErrorAction Stop forï¿½a qualquer aviso a cair no bloco catch abaixo
         $statusDominio = Test-ComputerSecureChannel -ErrorAction Stop
         
         if ($statusDominio) {
-            Write-Host "Status: CONECTADO e CONFIÁVEL (True)" -ForegroundColor Green
+            Write-Host "Status: CONECTADO e CONFIï¿½VEL (True)" -ForegroundColor Green
         } else {
-            Write-Host "Status: FALHA NA CONFIANÇA (False)" -ForegroundColor Red
+            Write-Host "Status: FALHA NA CONFIANï¿½A (False)" -ForegroundColor Red
         }
     } catch {
-        Write-Host "Erro: Não foi possível testar o domínio (A máquina não está no domínio ou está sem rede)." -ForegroundColor DarkGray
+        Write-Host "Erro: Nï¿½o foi possï¿½vel testar o domï¿½nio (A mï¿½quina nï¿½o estï¿½ no domï¿½nio ou estï¿½ sem rede)." -ForegroundColor DarkGray
     }
 
-    Write-Host "`nAtualizações e testes concluídos!" -ForegroundColor Green
+    Write-Host "`nAtualizaï¿½ï¿½es e testes concluï¿½dos!" -ForegroundColor Green
     Pause
 }
 
@@ -312,26 +312,34 @@ function Manutencao {
         Write-Host "2 - Correcao de erros do sistema (SFC e DISM)"
         Write-Host "3 - Correcao do Windows Update (Reset total)"
         Write-Host "4 - Limpeza de updates antigos (Libera espaco)"
-        Write-Host "5 - Alterar senha de contas de usuário local"
+        Write-Host "5 - Alterar senha de contas de usuï¿½rio local"
         Write-Host "6 - Reiniciar adaptador de rede"
-        Write-Host "7 - Verificação e correção de erros de disco"
-        Write-Host "8 - Atualizar políticas de grupo - GPOs"
+        Write-Host "7 - Verificaï¿½ï¿½o e correï¿½ï¿½o de erros de disco"
+        Write-Host "8 - Atualizar polï¿½ticas de grupo - GPOs"
         Write-Host "0 - Voltar"
         Write-Host ""
 
         $opcao = Read-Host "Escolha"
 
-        switch ($opcao) {
-            "1" { Teste-Rede }
-            "2" { Sistema-Scan }
-            "3" { Corrigir-WindowsUpdate }
-            "4" { Limpar-WindowsUpdate }
-            "5" { Resetar-SenhaUsuario }
-            "6" { Reiniciar-AdaptadorRede }
-            "7" { Verificar-Disco }
-            "8" { Atualizar-GPOs }
-            "0" { return }
-            default { Write-Host "Opcao invalida" -ForegroundColor Yellow; Pause }
-        }
+        try {
+            switch ($opcao) {
+                "1" { Teste-Rede }
+                "2" { Sistema-Scan }
+                "3" { Corrigir-WindowsUpdate }
+                "4" { Limpar-WindowsUpdate }
+                "5" { Resetar-SenhaUsuario }
+                "6" { Reiniciar-AdaptadorRede }
+                "7" { Verificar-Disco }
+                "8" { Atualizar-GPOs }
+                "0" { return }
+                default { Write-Host "Opcao invalida" -ForegroundColor Yellow; Pause }
+            }
+        } catch {
+            Write-Host "`n[ERRO INESPERADO] A operacao foi interrompida devido a um erro." -ForegroundColor Red
+            Write-Host "Detalhes: $($_.Exception.Message)" -ForegroundColor Red
+            if ($_.InvocationInfo) {
+                Write-Host "Origem: $($_.InvocationInfo.PositionMessage)" -ForegroundColor DarkGray
+            }
+        }    
     }
 }

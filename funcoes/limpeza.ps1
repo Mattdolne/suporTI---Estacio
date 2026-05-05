@@ -8,7 +8,7 @@ function Iniciar-Log($tipo) {
         Remove-Item $Global:LogPath -Force -ErrorAction SilentlyContinue
     }
 
-    $inicio = Get-Date
+    $inicio = Get-Date -Format 'dd/MM/yyyy'
 
     Add-Content $Global:LogPath "===== LIMPEZA $tipo ====="
     Add-Content $Global:LogPath "Inicio: $inicio"
@@ -25,7 +25,7 @@ function Escrever-Resumo($descricao, $quantidade, $mb) {
 }
 
 function Finalizar-Log($inicio, $totalArquivos, $totalMB) {
-    $fim = Get-Date
+    $fim = Get-Date -Format 'dd/MM/yyyy'
 
     Add-Content $Global:LogPath ""
     Add-Content $Global:LogPath "TOTAL ARQUIVOS: $totalArquivos"
@@ -47,8 +47,8 @@ function Medir-Caminho($caminho) {
 
     return @{
         Quantidade = $quantidade
-        Bytes = $tamanho
-        MB = [math]::Round($tamanho / 1MB, 2)
+        Bytes      = $tamanho
+        MB         = [math]::Round($tamanho / 1MB, 2)
     }
 }
 
@@ -134,12 +134,14 @@ function Executar-LimpezaRapida {
 
                 Remove-Item $item.FullName -Force -Recurse -ErrorAction Stop
                 $totalLixeira++
-            } catch {
+            }
+            catch {
                 Start-Sleep -Milliseconds 200
                 try {
                     Remove-Item $item.FullName -Force -Recurse -ErrorAction Stop
                     $totalLixeira++
-                } catch {
+                }
+                catch {
                     Write-Host "Falha: $($item.FullName)" -ForegroundColor Yellow
                 }
             }
@@ -156,7 +158,7 @@ function Executar-LimpezaRapida {
 
     return @{
         Arquivos = $totalArquivos
-        Bytes = $totalBytes
+        Bytes    = $totalBytes
     }
 }
 
@@ -207,7 +209,7 @@ function Limpeza-Completa {
         $_.Name -notin @("Public", "Default", "Default User", "All Users")
     }
 
-    $pastas = @("Documents","Downloads","Pictures","Videos","Favorites","Links","Searches")
+    $pastas = @("Documents", "Downloads", "Pictures", "Videos", "Favorites", "Links", "Searches")
 
     foreach ($user in $usuarios) {
         foreach ($pasta in $pastas) {
@@ -238,7 +240,8 @@ function Limpeza-Completa {
 
                         $totalArquivos++
                         $totalBytes += $tamanho
-                    } catch {
+                    }
+                    catch {
                         Write-Host "ERRO ao remover: $($user.Name)\$($item.Name)" -ForegroundColor Yellow
                     }
                 }
@@ -286,13 +289,22 @@ function Limpeza {
 
         $opcao = Read-Host "Escolha"
 
-        switch ($opcao) {
-            "1" { Limpeza-Rapida }
-            "2" { Limpeza-Completa }
-            "3" { Limpeza-Rapida; Desligar-Maquina }
-            "4" { Limpeza-Completa; Desligar-Maquina }
-            "0" { return }
-            default { Write-Host "Opcao invalida" -ForegroundColor Yellow; Pause }
+        try {
+            switch ($opcao) {
+                "1" { Limpeza-Rapida }
+                "2" { Limpeza-Completa }
+                "3" { Limpeza-Rapida; Desligar-Maquina }
+                "4" { Limpeza-Completa; Desligar-Maquina }
+                "0" { return }
+                default { Write-Host "Opcao invalida" -ForegroundColor Yellow; Pause }
+            }
+        }
+        catch {
+            Write-Host "`n[ERRO INESPERADO] A operacao foi interrompida devido a um erro." -ForegroundColor Red
+            Write-Host "Detalhes: $($_.Exception.Message)" -ForegroundColor Red
+            if ($_.InvocationInfo) {
+                Write-Host "Origem: $($_.InvocationInfo.PositionMessage)" -ForegroundColor DarkGray
+            }
         }
 
         Pause
