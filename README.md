@@ -64,7 +64,7 @@ Solução rápida para os problemas mais comuns de infraestrutura e SO.
 
     Limpeza de Updates Antigos: Limpa instaladores de cache antigos do Windows Update para liberar espaço em disco (pode liberar muito espaço, mas também impede rollback de versões antigas de updates - use com cautela).
 
-    Listar Todos os Usuários Locais do Dispositivo: Lista usuários locais e informações básicas sobre eles.
+    Listar e resetar senha de usuários locais.
 
     Reiniciar adaptador de rede.
 
