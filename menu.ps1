@@ -124,28 +124,11 @@ while ($continuar) {
 
     try {
         switch ($opcao) {
-            "1" { 
-                Limpeza 
-            }
-            "2" {
-                if (Get-Command Auditoria -ErrorAction SilentlyContinue) {
-                    Auditoria
-                } else {
-                    Write-Host "Auditoria ainda nao implementada" -ForegroundColor Yellow
-                    Pause
-                }
-            }
-            "3" {
-                if (Get-Command Manutencao -ErrorAction SilentlyContinue) {
-                    Manutencao
-                } else {
-                    Write-Host "Manutencao ainda nao implementada" -ForegroundColor Yellow
-                    Pause
-                }
-            }
-            "4" {
-                Sobre
-            }
+            "1" { Limpeza }
+            "2" { Auditoria }
+            "3" { Manutencao }
+            "4" { Sobre }
+            
             default { 
                 Write-Host "Opcao invalida" -ForegroundColor Yellow
                 Pause 

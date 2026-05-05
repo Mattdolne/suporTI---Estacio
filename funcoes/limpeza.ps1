@@ -265,6 +265,65 @@ function Limpeza-Completa {
     Finalizar-Log $inicio $totalArquivos $totalMB
 }
 
+# ==========================================
+# LIMPEZA DE PERFIS INATIVOS (> 10 DIAS)
+# ==========================================
+function Limpar-PerfisInativos {
+    Clear-Host
+    Write-Host "ATENCAO: LIMPEZA DE PERFIS INATIVOS" -ForegroundColor Red
+    Write-Host "Esta opcao apaga TODAS as pastas e arquivos de usuarios"
+    Write-Host "inativos ha mais de 10 dias."
+    Write-Host ""
+
+    $confirmacao = Read-Host "Digite S para continuar ou qualquer outra tecla para cancelar..."
+    if ($confirmacao -ne "S") {
+        Write-Host "Cancelado"
+        return
+    }
+
+    $inicio = Iniciar-Log "PERFIS INATIVOS (>10 DIAS)"
+
+    Add-Content $Global:LogPath "Status: Limpeza de perfis de usuários inativos."
+    Add-Content $Global:LogPath ""
+
+    Write-Host "`nVarrendo perfis..." -ForegroundColor Yellow
+
+    $dataLimite = (Get-Date).AddDays(-10)
+    $perfisRemovidos = 0
+
+    $perfis = Get-CimInstance -ClassName Win32_UserProfile | Where-Object {
+        $_.Special -eq $false -and
+        $_.Loaded -eq $false
+    }
+
+    foreach ($perfil in $perfis) {
+        if ($perfil.LastUseTime -lt $dataLimite) {
+            $caminho = $perfil.LocalPath
+            Write-Host "Removendo: $caminho" -ForegroundColor DarkYellow
+
+            $med = Medir-Caminho $caminho
+
+            try {
+                Remove-CimInstance -InputObject $perfil -ErrorAction Stop
+                Write-Host "OK - $caminho"
+
+                $totalArquivos += $med.Quantidade
+                $totalBytes += $med.Bytes
+                Escrever-Resumo "Perfil removido ($caminho)" 1 0
+                $perfisRemovidos++
+            }
+            catch {
+                Write-Host "ERRO ao remover: $caminho" -ForegroundColor Red
+            }
+        }
+    }
+
+    Write-Host "`nConcluido! $perfisRemovidos perfis removidos." -ForegroundColor Green
+
+    Finalizar-Log $inicio $perfisRemovidos 0
+}
+    
+
 # ================================
 # DESLIGAMENTO
 # ================================
@@ -284,6 +343,7 @@ function Limpeza {
         Write-Host "2 - Limpeza completa"
         Write-Host "3 - Limpeza rapida e desligar"
         Write-Host "4 - Limpeza completa e desligar"
+        Write-Host "5 - Limpeza de perfis inativos (>10 dias)"
         Write-Host "0 - Voltar"
         Write-Host ""
 
@@ -295,6 +355,7 @@ function Limpeza {
                 "2" { Limpeza-Completa }
                 "3" { Limpeza-Rapida; Desligar-Maquina }
                 "4" { Limpeza-Completa; Desligar-Maquina }
+                "5" { Limpar-PerfisInativos }
                 "0" { return }
                 default { Write-Host "Opcao invalida" -ForegroundColor Yellow; Pause }
             }

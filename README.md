@@ -8,6 +8,7 @@
 Um canivete suico em PowerShell desenvolvido para otimizar, automatizar e padronizar os atendimentos de suporte tecnico de Nivel 1 no ambiente academico.
 
 ## Objetivo
+
 Reduzir o tempo gasto com rotinas repetitivas de troubleshooting, limpeza de disco, coleta de inventario e correcao de sistema operacional, garantindo que os procedimentos sejam executados de forma segura e gerem logs de auditoria.
 
 ---
@@ -23,7 +24,7 @@ A ferramenta foi construida com uma arquitetura modular. O menu.ps1 atua como o 
     ┣ auditoria.ps1       # Modulo de coleta de inventario
     ┗ manutencao.ps1      # Modulo de diagnostico e reparo de SO
 
-Funcionalidades por Modulo
+## Funcionalidades por Modulo
 
 1. Limpeza
 
@@ -71,11 +72,11 @@ Solucao rapida para os problemas mais comuns de infraestrutura e SO.
 
     Instalar RSAT - Inicia verificação se a máquina está dentro de domínio para prosseguir com a configuração
 
-Pre-requisitos e Execucao
+## Pre-requisitos e Execucao
 
     O script foi projetado para rodar nativamente no Windows 10 e Windows 11.
     E obrigatoria a execucao com Privilegios de Administrador (o proprio script fara a validacao e bloqueara a execucao caso o tecnico nao seja admin).
 
-Como usar
+## Como usar
 
-Para evitar bloqueios de script, rode como administrador do .bat Executar. Alem de tratar como executavel, este bat roda uma camada adicional de prompt de comando que permite que os scripts .ps1 funcionem sem restricoes comuns. 
+Para evitar bloqueios de script, rode como administrador do .bat Executar. Alem de tratar como executavel, este bat roda uma camada adicional de prompt de comando que permite que os scripts .ps1 funcionem sem restricoes comuns.
