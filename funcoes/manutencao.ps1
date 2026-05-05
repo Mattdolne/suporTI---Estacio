@@ -302,6 +302,34 @@ function Atualizar-GPOs {
 }
 
 # ================================
+# INSTALAR RSAT
+# ================================
+function Instalar-RSAT {
+    Clear-Host
+    Write-Host "====== INSTALACAO DE FERRAMENTAS RSAT ======" -ForegroundColor Cyan
+    Write-Host "Verificando pre-requisitos do sistema...`n" -ForegroundColor Yellow
+
+    $computador = Get-WmiObject -Class Win32_ComputerSystem
+
+    if (-not $computador.PartOfDomain) {
+        Write-Host "Esta maquina nao esta operando em dominio!`n" -ForegroundColor Red
+        Write-Host "O RSAT so pode ser instalado em maquinas dentro do dominio - CORP ou ACAD`n" -ForegroundColor Red
+        Pause
+        return  
+    }
+
+    Write-Host "`nInstalando o RSAT..." -ForegroundColor Yellow
+    Add-WindowsCapability -Online -Name "Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0" -ErrorAction SilentlyContinue
+    Write-Host "`nGerenciamento de GPO..." -ForegroundColor Yellow
+    Add-WindowsCapability -Online -Name "Rsat.GroupPolicy.Management.Tools~~~~0.0.1.0" -ErrorAction SilentlyContinue
+
+    Write-Host "`nInstalacao concluida! Verifique o Menu Iniciar em 'Ferramentas Administrativas'." -ForegroundColor Green
+    Write-Host "`nSe nao encontrar o gerenciador de servidores, reinicie a maquina e procure novamente." -ForegroundColor Green
+    Pause
+
+}
+
+# ================================
 # MENU MANUTENCAO
 # ================================
 function Manutencao {
@@ -316,6 +344,7 @@ function Manutencao {
         Write-Host "6 - Reiniciar adaptador de rede"
         Write-Host "7 - Verificacao e correcao de erros de disco"
         Write-Host "8 - Atualizar politicas de grupo - GPOs"
+        Write-Host "9 - Instalar RSAT"
         Write-Host "0 - Voltar"
         Write-Host ""
 
@@ -331,6 +360,7 @@ function Manutencao {
                 "6" { Reiniciar-AdaptadorRede }
                 "7" { Verificar-Disco }
                 "8" { Atualizar-GPOs }
+                "9" { Instalar-RSAT }
                 "0" { return }
                 default { Write-Host "Opcao invalida" -ForegroundColor Yellow; Pause }
             }

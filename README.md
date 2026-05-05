@@ -62,9 +62,14 @@ Solucao rapida para os problemas mais comuns de infraestrutura e SO.
     Limpeza de Updates Antigos: Limpa instaladores de cache antigos do Windows Update para liberar espaco em disco (pode liberar muito espaco, mas tambem impede rollback de versoes antigas de updates - use com cautela).
 
     Listar e resetar senha de usuarios locais.
+
     Reiniciar adaptador de rede.
+
     Verificar e corrigir erros de disco.
+
     Atualizar e verificar politicas de grupo - GPOs
+
+    Instalar RSAT - Inicia verificação se a máquina está dentro de domínio para prosseguir com a configuração
 
 Pre-requisitos e Execucao
 

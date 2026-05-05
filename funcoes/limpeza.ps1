@@ -168,7 +168,7 @@ function Executar-LimpezaRapida {
 function Limpeza-Rapida {
     $inicio = Iniciar-Log "RAPIDA"
 
-    Write-Host "Iniciando limpeza rapida..." -ForegroundColor Cyan
+    Write-Host "Iniciando limpeza..." -ForegroundColor Cyan
 
     $res = Executar-LimpezaRapida
 
