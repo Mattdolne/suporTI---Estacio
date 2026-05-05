@@ -26,7 +26,7 @@ function Teste-Rede {
 
     # Teste 3: Portais Institucionais
     Write-Host "`n3. Teste de Portais Institucionais:" -ForegroundColor Yellow
-    
+
     $portais = @(
         @{ Nome = "SIA"; Url = "https://sia.estacio.br/" }
         @{ Nome = "SAVA"; Url = "https://estudante.estacio.br/" }
@@ -59,7 +59,7 @@ function Sistema-Scan {
     Write-Host "===== CORRECAO DO SISTEMA (SFC / DISM) =====" -ForegroundColor Cyan
     Write-Host "ATENCAO: Este processo exige muita CPU/Disco e pode demorar (15-30 min)." -ForegroundColor Yellow
     Write-Host ""
-    
+
     $confirmacao = Read-Host "Deseja iniciar a correcao? (S/N)"
     if ($confirmacao -ne "S") {
         Write-Host "Cancelado."
@@ -73,10 +73,10 @@ function Sistema-Scan {
     Repair-WindowsImage -Online -RestoreHealth
 
         if ($LASTEXITCODE -eq 0) {
-            Write-Host "Reparo conclu�do com sucesso!" -ForegroundColor Green
+            Write-Host "Reparo concluido com sucesso!" -ForegroundColor Green
         } else {
-            Write-Error "O reparo falhou com c�digo: $($LASTEXITCODE.ExitCode)"
-        } 
+            Write-Error "O reparo falhou com codigo: $($LASTEXITCODE.ExitCode)"
+        }
 
     Write-Host "`nManutencao de sistema finalizada." -ForegroundColor Green
     Pause
@@ -130,16 +130,16 @@ function Limpar-WindowsUpdate {
 
     Write-Host "`nLimpando cache de Download..."
     $wuPath = "C:\Windows\SoftwareDistribution\Download\*"
-    
+
     if (Test-Path "C:\Windows\SoftwareDistribution\Download") {
         $itens = Get-ChildItem $wuPath -Recurse -Force -ErrorAction SilentlyContinue
-        
+
         $tamanhoBytes = ($itens | Where-Object { -not $_.PSIsContainer } | Measure-Object -Property Length -Sum).Sum
         if (-not $tamanhoBytes) { $tamanhoBytes = 0 }
         $tamanhoMB = [math]::Round($tamanhoBytes / 1MB, 2)
 
         Remove-Item $wuPath -Recurse -Force -ErrorAction SilentlyContinue
-        
+
         Write-Host "Limpeza concluida. Espaco liberado: $tamanhoMB MB" -ForegroundColor Green
     } else {
         Write-Host "Pasta de cache nao encontrada ou ja esta vazia." -ForegroundColor Yellow
@@ -149,36 +149,36 @@ function Limpar-WindowsUpdate {
 }
 
 # ================================
-# RESET DE SENHA DE USU�RIO LOCAL
+# RESET DE SENHA DE USUARIO LOCAL
 # ================================
 function Resetar-SenhaUsuario {
     Clear-Host
     Write-Host "====== RESET DE SENHA LOCAL ======" -ForegroundColor Cyan
-    Write-Host "Altera a senha de qualquer usu�rio sem precisar da senha atual.`n" -ForegroundColor Yellow
+    Write-Host "Altera a senha de qualquer usuario sem precisar da senha atual.`n" -ForegroundColor Yellow
 
-    # Lista os usu�rios existentes para facilitar a escolha
-    Write-Host "Usu�rios locais dispon�veis:" -ForegroundColor Gray
+    # Lista os usuarios existentes para facilitar a escolha
+    Write-Host "Usuarios locais disponiveis:" -ForegroundColor Gray
     Get-LocalUser | Select-Object Name, FullName, Enabled | Format-Table -AutoSize
 
-    $nomeUsuario = Read-Host "Digite o nome exato do usu�rio (ou '0' para cancelar)"
-    
+    $nomeUsuario = Read-Host "Digite o nome exato do usuario (ou '0' para cancelar)"
+
     if ($nomeUsuario -eq "0" -or [string]::IsNullOrWhiteSpace($nomeUsuario)) {
-        Write-Host "Opera��o cancelada." -ForegroundColor Gray
+        Write-Host "Operacao cancelada." -ForegroundColor Gray
         return
     }
 
-    # O par�metro -AsSecureString oculta a senha enquanto voc� digita (mostra asteriscos)
-    $novaSenha = Read-Host "Digite a NOVA senha para o usu�rio '$nomeUsuario'" -AsSecureString
+    # O parametro -AsSecureString oculta a senha enquanto voce digita (mostra asteriscos)
+    $novaSenha = Read-Host "Digite a NOVA senha para o usuario '$nomeUsuario'" -AsSecureString
 
     Write-Host "`nAplicando nova senha..." -ForegroundColor Yellow
 
     try {
-        # O Set-LocalUser exige que a senha seja passada como SecureString, o que j� fizemos acima
+        # O Set-LocalUser exige que a senha seja passada como SecureString, o que ja fizemos acima
         Set-LocalUser -Name $nomeUsuario -Password $novaSenha -ErrorAction Stop
-        
+
         Write-Host "[OK] Senha alterada com sucesso!" -ForegroundColor Green
     } catch {
-        Write-Host "[ERRO] N�o foi poss�vel alterar a senha." -ForegroundColor Red
+        Write-Host "[ERRO] Nao foi possivel alterar a senha." -ForegroundColor Red
         Write-Host "Motivo: $_" -ForegroundColor DarkGray
     }
 
@@ -192,42 +192,42 @@ function Resetar-SenhaUsuario {
 function Reiniciar-AdaptadorRede {
     Clear-Host
     Write-Host "===== REINICIAR ADAPTADOR DE REDE =====" -ForegroundColor Cyan
-    
+
     # 1. Busca todos os adaptadores ativos (Up)
     $adaptadores = Get-NetAdapter | Where-Object { $_.Status -eq "Up" }
-    
+
     if ($adaptadores.Count -eq 0) {
         Write-Host "Nenhum adaptador de rede ativo encontrado." -ForegroundColor Red
         Pause
         return
     }
 
-    # 2. Lista os adaptadores com um �ndice num�rico
+    # 2. Lista os adaptadores com um indice numerico
     Write-Host "Selecione o adaptador para reiniciar:" -ForegroundColor Yellow
     for ($i = 0; $i -lt $adaptadores.Count; $i++) {
         Write-Host "[$i] $($adaptadores[$i].Name) - $($adaptadores[$i].InterfaceDescription)"
     }
     Write-Host "[S] Sair" -ForegroundColor Gray
 
-    # 3. Captura a escolha do usu�rio
-    $escolha = Read-Host "`nDigite o n�mero da op��o"
+    # 3. Captura a escolha do usuario
+    $escolha = Read-Host "`nDigite o numero da opcao"
 
     if ($escolha -eq "S") { return }
 
-    # 4. Valida se o n�mero digitado � v�lido
+    # 4. Valida se o numero digitado e valido
     if ($escolha -ge 0 -and $escolha -lt $adaptadores.Count) {
         $adaptadorSelecionado = $adaptadores[$escolha]
-        
+
         Write-Host "`nReiniciando $($adaptadorSelecionado.Name)..." -ForegroundColor Yellow
-        
+
         # O processo de desligar e ligar a interface
         Disable-NetAdapter -Name $adaptadorSelecionado.Name -Confirm:$false
         Start-Sleep -Seconds 2 # Pequena pausa para garantir que o sistema processou o comando
         Enable-NetAdapter -Name $adaptadorSelecionado.Name -Confirm:$false
-        
+
         Write-Host "Adaptador reiniciado com sucesso!" -ForegroundColor Green
     } else {
-        Write-Host "Op��o inv�lida!" -ForegroundColor Red
+        Write-Host "Opcao invalida!" -ForegroundColor Red
     }
     Pause
 }
@@ -259,10 +259,10 @@ function Verificar-Disco {
                 Write-Host "`nAgendando correcao profunda para o disco C:..." -ForegroundColor Yellow
                 Write-Host "O processo ira corrigir erros e recuperar setores defeituosos no proximo boot." -ForegroundColor Red
                 Write-Host ""
-                
+
                 # O comando "echo y" responde "Sim" automaticamente quando o chkdsk pergunta se quer agendar
                 cmd.exe /c "echo y | chkdsk C: /f /r"
-                
+
                 Write-Host "`nAgendamento concluido. Reinicie a maquina para iniciar o reparo." -ForegroundColor Green
                 Pause
             }
@@ -273,31 +273,31 @@ function Verificar-Disco {
 }
 
 # ================================
-# FOR�AR GPOs E TESTE DE DOM�NIO
+# FORCAR GPOs E TESTE DE DOMINIO
 # ================================
 function Atualizar-GPOs {
     Clear-Host
-    Write-Host "====== ATUALIZAR E VERIFICAR POL�TICAS DE GRUPO (GPO) ======" -ForegroundColor Cyan
-    
-    Write-Host "`n[1/2] Iniciando atualiza��o de GPOs..." -ForegroundColor Yellow
+    Write-Host "====== ATUALIZAR E VERIFICAR POLITICAS DE GRUPO (GPO) ======" -ForegroundColor Cyan
+
+    Write-Host "`n[1/2] Iniciando atualizacao de GPOs..." -ForegroundColor Yellow
     gpupdate /force
 
-    Write-Host "`n[2/2] Testando rela��o de confian�a com o dom�nio..." -ForegroundColor Yellow
-    
+    Write-Host "`n[2/2] Testando relacao de confianca com o dominio..." -ForegroundColor Yellow
+
     try {
-        # O -ErrorAction Stop for�a qualquer aviso a cair no bloco catch abaixo
+        # O -ErrorAction Stop forca qualquer aviso a cair no bloco catch abaixo
         $statusDominio = Test-ComputerSecureChannel -ErrorAction Stop
-        
+
         if ($statusDominio) {
-            Write-Host "Status: CONECTADO e CONFI�VEL (True)" -ForegroundColor Green
+            Write-Host "Status: CONECTADO e CONFIAVEL (True)" -ForegroundColor Green
         } else {
-            Write-Host "Status: FALHA NA CONFIAN�A (False)" -ForegroundColor Red
+            Write-Host "Status: FALHA NA CONFIANCA (False)" -ForegroundColor Red
         }
     } catch {
-        Write-Host "Erro: N�o foi poss�vel testar o dom�nio (A m�quina n�o est� no dom�nio ou est� sem rede)." -ForegroundColor DarkGray
+        Write-Host "Erro: Nao foi possivel testar o dominio (A maquina nao esta no dominio ou esta sem rede)." -ForegroundColor DarkGray
     }
 
-    Write-Host "`nAtualiza��es e testes conclu�dos!" -ForegroundColor Green
+    Write-Host "`nAtualizacoes e testes concluidos!" -ForegroundColor Green
     Pause
 }
 
@@ -312,10 +312,10 @@ function Manutencao {
         Write-Host "2 - Correcao de erros do sistema (SFC e DISM)"
         Write-Host "3 - Correcao do Windows Update (Reset total)"
         Write-Host "4 - Limpeza de updates antigos (Libera espaco)"
-        Write-Host "5 - Alterar senha de contas de usu�rio local"
+        Write-Host "5 - Alterar senha de contas de usuario local"
         Write-Host "6 - Reiniciar adaptador de rede"
-        Write-Host "7 - Verifica��o e corre��o de erros de disco"
-        Write-Host "8 - Atualizar pol�ticas de grupo - GPOs"
+        Write-Host "7 - Verificacao e correcao de erros de disco"
+        Write-Host "8 - Atualizar politicas de grupo - GPOs"
         Write-Host "0 - Voltar"
         Write-Host ""
 
@@ -340,6 +340,6 @@ function Manutencao {
             if ($_.InvocationInfo) {
                 Write-Host "Origem: $($_.InvocationInfo.PositionMessage)" -ForegroundColor DarkGray
             }
-        }    
+        }
     }
 }

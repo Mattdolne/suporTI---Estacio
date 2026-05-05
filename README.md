@@ -1,83 +1,75 @@
-# 🛠️ Ferramenta de Suporte TI - Campus Resende
+# Ferramenta de Suporte TI - Campus Resende
 
-![PowerShell](https://img.shields.io/badge/PowerShell-%E2%89%A55.1-blue?logo=powershell)
-![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D6?logo=windows)
-![Versão](https://img.shields.io/badge/Vers%C3%A3o-1.2-brightgreen)
+PowerShell >= 5.1
+Windows 10 | 11
+Versao 1.2
 
-Um "canivete suíço" em PowerShell desenvolvido para otimizar, automatizar e padronizar os atendimentos de suporte técnico de Nível 1 no ambiente acadêmico.
+Um canivete suico em PowerShell desenvolvido para otimizar, automatizar e padronizar os atendimentos de suporte tecnico de Nivel 1 no ambiente academico.
 
-## 🎯 Objetivo
-Reduzir o tempo gasto com rotinas repetitivas de troubleshooting, limpeza de disco, coleta de inventário e correção de sistema operacional, garantindo que os procedimentos sejam executados de forma segura e gerem logs de auditoria.
+## Objetivo
+Reduzir o tempo gasto com rotinas repetitivas de troubleshooting, limpeza de disco, coleta de inventario e correcao de sistema operacional, garantindo que os procedimentos sejam executados de forma segura e gerem logs de auditoria.
 
 ---
 
-## 📂 Estrutura do Projeto
+## Estrutura do Projeto
 
-A ferramenta foi construída com uma arquitetura modular. O `menu.ps1` atua como o roteador central, carregando as funções de scripts isolados na pasta `funcoes`.
+A ferramenta foi construida com uma arquitetura modular. O menu.ps1 atua como o roteador central, carregando as funcoes de scripts isolados na pasta funcoes.
 
-```text
 📦 suporte-ti
- ┣ 📜 menu.ps1               # Script principal e menu interativo
- ┗ 📂 funcoes
-    ┣ 📜 limpeza.ps1         # Módulo de limpeza de disco e cache
-    ┣ 📜 auditoria.ps1       # Módulo de coleta de inventário
-    ┗ 📜 manutencao.ps1      # Módulo de diagnóstico e reparo de SO
-```
+ ┣ menu.ps1               # Script principal e menu interativo
+ ┗ funcoes
+    ┣ limpeza.ps1         # Modulo de limpeza de disco e cache
+    ┣ auditoria.ps1       # Modulo de coleta de inventario
+    ┗ manutencao.ps1      # Modulo de diagnostico e reparo de SO
 
-🚀 Funcionalidades por Módulo
+Funcionalidades por Modulo
 
-🧹 1. Limpeza
+1. Limpeza
 
-Foco em liberação de espaço e privacidade, gerando arquivo de log em C:\registrolimpezapreventiva.txt.
+Foco em liberacao de espaco e privacidade, gerando arquivo de log em C:\registrolimpezapreventiva.txt.
 
-    Limpeza Rápida: Esvazia %TEMP%, C:\Windows\Temp e a Lixeira do sistema de forma segura (tratando erros de arquivos em uso).
+    Limpeza Rapida: Esvazia %TEMP%, C:\Windows\Temp e a Lixeira do sistema de forma segura (tratando erros de arquivos em uso).
 
-    Limpeza Completa: Remove os itens da limpeza rápida e varre pastas de perfis de usuário (Downloads, Documents, etc.), respeitando uma whitelist de extensões no Desktop (.lnk, .url, .website). Limpa também o cache do Google Chrome e Microsoft Edge (não rode em máquina administrativa, pois apaga arquivos de usuários).
+    Limpeza Completa: Remove os itens da limpeza rapida e varre pastas de perfis de usuario (Downloads, Documents, etc.), respeitando uma whitelist de extensoes no Desktop (.lnk, .url, .website). Limpa tambem o cache do Google Chrome e Microsoft Edge (nao rode em maquina administrativa, pois apaga arquivos de usuarios).
 
-    Opções integradas para desligar a máquina automaticamente após o término.
+    Opcoes integradas para desligar a maquina automaticamente apos o termino.
 
-📊 2. Auditoria
+2. Auditoria
 
 Coleta dados de Hardware, Rede e Sistema Operacional sem depender de ferramentas de terceiros.
 
-    Dados coletados: Hostname, Domínio, Versão/Build do Windows, Data de Formatação, Serial Number da BIOS, CPU, RAM total, Espaço em Disco (Total/Usado), IP e MAC Address.
+    Dados coletados: Hostname, Dominio, Versao/Build do Windows, Data de Formatacao, Serial Number da BIOS, CPU, RAM total, Espaco em Disco (Total/Usado), IP e MAC Address.
 
-    Formatos de Exportação: * Visualização direta no Terminal.
+    Formatos de Exportacao: 
+    - Visualizacao direta no Terminal.
+    - Exportacao para TXT (Leitura rapida).
+    - Exportacao para CSV (Integracao com Excel/Sistemas de Gestao).
+    - Exportacao para XML (Armazenamento estruturado).
 
-        Exportação para TXT (Leitura rápida).
+    Nota: Todos os relatorios recebem carimbo de Data/Hora e sao salvos automaticamente no Desktop do usuario.
 
-        Exportação para CSV (Integração com Excel/Sistemas de Gestão).
+3. Manutencao
 
-        Exportação para XML (Armazenamento estruturado).
+Solucao rapida para os problemas mais comuns de infraestrutura e SO.
 
-        Nota: Todos os relatórios recebem carimbo de Data/Hora e são salvos automaticamente no Desktop do usuário.
+    Teste de Rede Avancado: Valida conectividade externa (Ping), resolucao DNS, disponibilidade de Portais Institucionais HTTP (SIA e SAVA) e estima a taxa de Download real via CDN (Megabits e Megabytes por segundo).
 
-🔧 3. Manutenção
+    Correcao do Sistema: Executa rotina combinada de verificacao de integridade (SFC /scannow) e reparo de imagem (DISM /RestoreHealth).
 
-Solução rápida para os problemas mais comuns de infraestrutura e SO.
+    Reset do Windows Update: Para servicos criticos (wuauserv, bits, cryptsvc), limpa o cache corrompido (DataStore e Download) e reinicia os servicos.
 
-    Teste de Rede Avançado: Valida conectividade externa (Ping), resolução DNS, disponibilidade de Portais Institucionais HTTP (SIA e SAVA) e estima a taxa de Download real via CDN (Megabits e Megabytes por segundo).
+    Limpeza de Updates Antigos: Limpa instaladores de cache antigos do Windows Update para liberar espaco em disco (pode liberar muito espaco, mas tambem impede rollback de versoes antigas de updates - use com cautela).
 
-    Correção do Sistema: Executa rotina combinada de verificação de integridade (SFC /scannow) e reparo de imagem (DISM /RestoreHealth).
-
-    Reset do Windows Update: Para serviços críticos (wuauserv, bits, cryptsvc), limpa o cache corrompido (DataStore e Download) e reinicia os serviços.
-
-    Limpeza de Updates Antigos: Limpa instaladores de cache antigos do Windows Update para liberar espaço em disco (pode liberar muito espaço, mas também impede rollback de versões antigas de updates - use com cautela).
-
-    Listar e resetar senha de usuários locais.
-
+    Listar e resetar senha de usuarios locais.
     Reiniciar adaptador de rede.
-
     Verificar e corrigir erros de disco.
+    Atualizar e verificar politicas de grupo - GPOs
 
-    Atualizar e verificar políticas de grupo - GPOs
-
-⚙️ Pré-requisitos e Execução
+Pre-requisitos e Execucao
 
     O script foi projetado para rodar nativamente no Windows 10 e Windows 11.
+    E obrigatoria a execucao com Privilegios de Administrador (o proprio script fara a validacao e bloqueara a execucao caso o tecnico nao seja admin).
 
-    É obrigatória a execução com Privilégios de Administrador (o próprio script fará a validação e bloqueará a execução caso o técnico não seja admin).
+Como usar
 
-🏃 Como usar
-
-Para evitar bloqueios de script, rode como administrador do .bat Executar. Além de tratar como executável, este bat roda uma camada adicional de prompt de comando que permite que os scripts .ps1 funcionem sem restrições comuns. 
+Para evitar bloqueios de script, rode como administrador do .bat Executar. Alem de tratar como executavel, este bat roda uma camada adicional de prompt de comando que permite que os scripts .ps1 funcionem sem restricoes comuns. 
