@@ -1,9 +1,10 @@
 # Ferramenta de Suporte TI - Campus Resende
 
-PowerShell >= 5.1
-Windows 10 | 11
-Versao 1.2
+![PowerShell](https://img.shields.io/badge/PowerShell-%3E%3D%205.1-blue)
+![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4)
+![Versão](https://img.shields.io/badge/Vers%C3%A3o-1.2-green)
 
+---
 Um canivete suico em PowerShell desenvolvido para otimizar, automatizar e padronizar os atendimentos de suporte tecnico de Nivel 1 no ambiente academico.
 
 ## Objetivo
