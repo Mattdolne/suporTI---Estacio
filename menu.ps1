@@ -8,10 +8,15 @@ $ErrorActionPreference = "Stop"
 # ================================
 $basePath = Split-Path -Parent $MyInvocation.MyCommand.Path
 
-# LIMPEZA (obrigatorio)
-. "$basePath\funcoes\limpeza.ps1"
+# LIMPEZA 
+$limpezaPath = "$basePath\funcoes\limpeza.ps1"
+if (Test-Path $limpezaPath) {
+    . $limpezaPath
+} else {
+    Write-Host "Aviso: limpeza.ps1 nao encontrado" -ForegroundColor Yellow
+}
 
-# AUDITORIA (opcional)
+# AUDITORIA 
 $auditoriaPath = "$basePath\funcoes\auditoria.ps1"
 if (Test-Path $auditoriaPath) {
     . $auditoriaPath
@@ -19,7 +24,7 @@ if (Test-Path $auditoriaPath) {
     Write-Host "Aviso: auditoria.ps1 nao encontrado" -ForegroundColor Yellow
 }
 
-# MANUTENCAO (opcional)
+# MANUTENCAO 
 $manutencaoPath = "$basePath\funcoes\manutencao.ps1"
 if (Test-Path $manutencaoPath) {
     . $manutencaoPath
@@ -120,7 +125,7 @@ $continuar = $true
 while ($continuar) {
     Mostrar-Menu
 
-    $opcao = Read-Host "Escolha"
+    $opcao = Read-Host "Selecionar modulo"
 
     try {
         switch ($opcao) {
