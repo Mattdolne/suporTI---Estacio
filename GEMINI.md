@@ -96,7 +96,12 @@ Gerencia a despoluição de disco rígido, remoção de arquivos temporários e 
    * Consulta os perfis de usuário via CIM (`Get-CimInstance Win32_UserProfile`), filtrando perfis que não sejam do sistema (`Special -eq $false`) e não estejam carregados na memória (`Loaded -eq $false`).
    * Filtra perfis cujo `LastUseTime` seja inferior a 10 dias atrás (`(Get-Date).AddDays(-10)`).
    * Remove o perfil do sistema via `Remove-CimInstance -InputObject $perfil`.
-5. `Desligar-Maquina`:
+5. `Limpar-PerfisSecundariosNavegadores` (Pública):
+   * Requer confirmação explícita (`S/N`).
+   * Encerra processos ativos de navegadores (`chrome.exe`, `msedge.exe`).
+   * Varre todos os diretórios `User Data` do Google Chrome e Microsoft Edge de todos os usuários em `C:\Users`.
+   * Identifica e remove todas as pastas de perfis secundários (`Profile 1`, `Profile 2`, etc.), incluindo contas sincronizadas, **preservando intacto o primeiro perfil (`Default`)**.
+6. `Desligar-Maquina`:
    * Executa `shutdown /s /t 5` para encerramento programado.
 
 ---

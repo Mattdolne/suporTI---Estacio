@@ -63,6 +63,7 @@ Focado na liberação de espaço em disco e higienização do sistema.
 * **Limpeza Completa**: Inclui todos os passos da Limpeza Rápida e realiza a higienização de pastas pessoais (`Documents`, `Downloads`, `Pictures`, `Videos`, `Favorites`, `Links`, `Searches`) de todos os perfis.
   > 🛡️ **Proteção do Desktop**: Limpa arquivos soltos na Área de Trabalho, mas preserva atalhos (`.lnk`, `.url`, `.website`). Limpa também os caches do Google Chrome e Microsoft Edge.
 * **Limpeza de Perfis Inativos (>10 dias)**: Identifica e remove perfis de usuários locais/domínio não carregados que não registram utilização há mais de 10 dias via CIM (`Win32_UserProfile`), liberando dezenas de gigabytes em computadores de laboratório.
+* **Limpeza de Perfis Secundários do Chrome e Edge**: Varre as instalações de navegadores de todos os usuários e exclui todos os perfis adicionais (`Profile 1`, `Profile 2`, etc.), incluindo contas sincronizadas, **preservando o 1º perfil principal (`Default`)**.
 * **Opções com Desligamento**: Permite agendar o desligamento automático do computador (`shutdown /s /t 5`) imediatamente após a conclusão da limpeza.
 
 ---

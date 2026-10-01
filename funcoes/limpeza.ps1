@@ -322,7 +322,72 @@ function Limpar-PerfisInativos {
 
     Finalizar-Log $inicio $perfisRemovidos 0
 }
-    
+
+# ==========================================
+# LIMPEZA DE PERFIS SECUNDARIOS DE NAVEGADORES
+# ==========================================
+function Limpar-PerfisSecundariosNavegadores {
+    Clear-Host
+    Write-Host "ATENCAO: LIMPEZA DE PERFIS SECUNDARIOS DO CHROME E EDGE" -ForegroundColor Red
+    Write-Host "Esta opcao apaga todos os perfis adicionais/secundarios dos navegadores"
+    Write-Host "(Profile 1, Profile 2, etc.), inclusive contas sincronizadas,"
+    Write-Host "MANTENDO APENAS O PRIMEIRA PERFIL ('Default')."
+    Write-Host ""
+
+    $confirmacao = Read-Host "Digite S para continuar ou qualquer outra tecla para cancelar"
+    if ($confirmacao -ne "S") {
+        Write-Host "Cancelado"
+        return
+    }
+
+    $inicio = Iniciar-Log "PERFIS SECUNDARIOS NAVEGADORES"
+
+    Write-Host "`nFechando instancias ativas do Chrome e Edge..." -ForegroundColor Yellow
+    Stop-Process -Name "chrome", "msedge" -Force -ErrorAction SilentlyContinue
+    Start-Sleep -Seconds 1
+
+    $usuarios = Get-ChildItem "C:\Users" -Directory | Where-Object {
+        $_.Name -notin @("Public", "Default", "Default User", "All Users")
+    }
+
+    $totalPerfisRemovidos = 0
+    $totalMB = 0
+
+    foreach ($user in $usuarios) {
+        $caminhosNavegadores = @(
+            "$($user.FullName)\AppData\Local\Google\Chrome\User Data",
+            "$($user.FullName)\AppData\Local\Microsoft\Edge\User Data"
+        )
+
+        foreach ($userDataPath in $caminhosNavegadores) {
+            if (Test-Path $userDataPath) {
+                $perfisSecundarios = Get-ChildItem -Path $userDataPath -Directory -ErrorAction SilentlyContinue | Where-Object {
+                    $_.Name -like "Profile *" -and $_.Name -ne "Default"
+                }
+
+                foreach ($perfil in $perfisSecundarios) {
+                    $med = Medir-Caminho $perfil.FullName
+                    Write-Host "Removendo perfil: $($user.Name) -> $($perfil.Name) ($($med.MB) MB)" -ForegroundColor DarkYellow
+
+                    try {
+                        Remove-Item -Path $perfil.FullName -Recurse -Force -ErrorAction Stop
+                        Write-Host "OK - Perfil $($perfil.Name) removido com sucesso." -ForegroundColor Green
+                        $totalPerfisRemovidos++
+                        $totalMB += $med.MB
+                        Escrever-Resumo "Perfil secundario removido ($($user.Name) - $($perfil.Name))" 1 $med.MB
+                    }
+                    catch {
+                        Write-Host "ERRO ao remover $($perfil.FullName): $($_.Exception.Message)" -ForegroundColor Red
+                    }
+                }
+            }
+        }
+    }
+
+    $totalMB = [math]::Round($totalMB, 2)
+    Write-Host "`nConcluido! $totalPerfisRemovidos perfis secundarios removidos ($totalMB MB liberados)." -ForegroundColor Green
+    Finalizar-Log $inicio $totalPerfisRemovidos $totalMB
+}
 
 # ================================
 # DESLIGAMENTO
@@ -344,6 +409,7 @@ function Limpeza {
         Write-Host "3 - Limpeza rapida e desligar"
         Write-Host "4 - Limpeza completa e desligar"
         Write-Host "5 - Limpeza de perfis inativos (>10 dias)"
+        Write-Host "6 - Limpeza de perfis secundarios do Chrome/Edge (Mantem o 1o)"
         Write-Host "0 - Voltar"
         Write-Host ""
 
@@ -356,6 +422,7 @@ function Limpeza {
                 "3" { Limpeza-Rapida; Desligar-Maquina }
                 "4" { Limpeza-Completa; Desligar-Maquina }
                 "5" { Limpar-PerfisInativos }
+                "6" { Limpar-PerfisSecundariosNavegadores }
                 "0" { return }
                 default { Write-Host "Opcao invalida" -ForegroundColor Yellow; Pause }
             }
