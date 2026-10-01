@@ -1,10 +1,9 @@
 # ========================================================
-# GERADOR DE EXECUTAVEL STANDALONE (suporTI-Estacio.exe)
+# GERADOR DE EXECUTAVEL STANDALONE (SuporTIvX.X.X.exe)
 # ========================================================
 $ErrorActionPreference = "Stop"
 
 $baseDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$outputExe = Join-Path $baseDir "suporTI-Estacio.exe"
 $buildDir = Join-Path $baseDir "temp_build"
 
 Write-Host "1. Lendo arquivos do projeto..." -ForegroundColor Cyan
@@ -14,13 +13,26 @@ $auditoriaCode = Get-Content (Join-Path $baseDir "funcoes\auditoria.ps1") -Raw -
 $manutencaoCode = Get-Content (Join-Path $baseDir "funcoes\manutencao.ps1") -Raw -Encoding UTF8
 $menuCode = Get-Content (Join-Path $baseDir "menu.ps1") -Raw -Encoding UTF8
 
+# Extrair a versao dinamicamente do menu.ps1
+$versaoMatch = [regex]::Match($menuCode, 'Versao:\s*([0-9\.]+)')
+if ($versaoMatch.Success) {
+    $versao = $versaoMatch.Groups[1].Value.Trim()
+} else {
+    $versao = "1.3"
+}
+
+$exeFileName = "SuporTIv$versao.exe"
+$outputExe = Join-Path $baseDir $exeFileName
+
+Write-Host "Versao detectada: v$versao -> Nome do executavel: $exeFileName" -ForegroundColor Yellow
+
 # Remover a secao de importacao dinamica de arquivos do menu.ps1 (ja que os codigos estarao concatenados em memoria)
 $menuCodeClean = $menuCode -replace '(?s)# ================================\s*# IMPORTAR MODULOS.*?(?=# ================================\s*# VALIDACAO DE ADMIN)', ''
 
 # Empacotar todos os modulos e o menu em um unico payload PowerShell
 $bundledScript = @"
 # ========================================================
-# suporTI-Estacio (Pacote Unificado Standalone)
+# suporTI-Estacio (Pacote Unificado Standalone v$versao)
 # ========================================================
 $limpezaCode
 
@@ -44,11 +56,16 @@ if (-not (Test-Path $buildDir)) {
 $csPath = Join-Path $buildDir "Program.cs"
 $manifestPath = Join-Path $buildDir "app.manifest"
 
+# Formatar versao para 4 digitos do manifesto assembly (ex: 1.3 -> 1.3.0.0)
+$manifestVersion = "$versao.0.0"
+if ($versao -match '^\d+\.\d+\.\d+$') { $manifestVersion = "$versao.0" }
+if ($versao -match '^\d+\.\d+\.\d+\.\d+$') { $manifestVersion = $versao }
+
 # Manifesto UAC exigindo elevação de Administrador
 $manifestContent = @"
 <?xml version="1.0" encoding="utf-8"?>
 <assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
-  <assemblyIdentity version="1.3.1.0" name="suporTI-Estacio"/>
+  <assemblyIdentity version="$manifestVersion" name="SuporTI"/>
   <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
     <security>
       <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
@@ -61,7 +78,7 @@ $manifestContent = @"
 
 Set-Content -Path $manifestPath -Value $manifestContent -Encoding UTF8
 
-# Codigo C# Wrapper (Descompacta o script em arquivo temporario em %TEMP% para contornar o limite de tamanho da linha de comando do Windows)
+# Codigo C# Wrapper
 $csContent = @"
 using System;
 using System.Diagnostics;
@@ -75,7 +92,7 @@ namespace SuporTIEstacio
         static void Main(string[] args)
         {
             string base64Payload = "$base64Payload";
-            string tempPs1Path = Path.Combine(Path.GetTempPath(), "suporTI_" + Guid.NewGuid().ToString("N") + ".ps1");
+            string tempPs1Path = Path.Combine(Path.GetTempPath(), "suporTI_v$versao`_" + Guid.NewGuid().ToString("N") + ".ps1");
 
             try
             {
@@ -127,8 +144,8 @@ $process = Start-Process -FilePath $cscCompiler -ArgumentList $compileArgs -Wait
 if ($process.ExitCode -eq 0 -and (Test-Path $outputExe)) {
     $sizeKB = [math]::Round((Get-Item $outputExe).Length / 1KB, 2)
     Write-Host "`n[SUCESSO] Executavel criado com sucesso!" -ForegroundColor Green
-    Write-Host "Caminho: $outputExe ($sizeKB KB)" -ForegroundColor Green
-    Write-Host "Tudo o que o programa precisa para rodar esta embutido neste unico arquivo .exe!" -ForegroundColor Yellow
+    Write-Host "Arquivo: $exeFileName ($sizeKB KB)" -ForegroundColor Green
+    Write-Host "Caminho completo: $outputExe" -ForegroundColor Green
 } else {
     Write-Host "`n[ERRO] Falha ao compilar o executavel." -ForegroundColor Red
 }
