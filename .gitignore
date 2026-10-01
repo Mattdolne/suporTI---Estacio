@@ -1,0 +1,3 @@
+# Executaveis gerados localmente
+*.exe
+temp_build/

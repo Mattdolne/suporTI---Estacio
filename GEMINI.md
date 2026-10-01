@@ -31,7 +31,9 @@ O projeto adota uma **arquitetura modular**. O arquivo `menu.ps1` atua como o or
 
 ```text
 C:\Users\mattheus.pereira\OneDrive - Corporativo\TI\Programas\suporte\suporTI---Estacio
-├── Executar.bat             # Script de inicialização (Bypass ExecutionPolicy)
+├── Executar.bat             # Script de inicialização rápida em modo desenvolvimento
+├── GerarExecutavel.bat      # Automação de compilação do executável de produção (.exe)
+├── Gerar-Executavel.ps1     # Engine de empacotamento standalone e compilação via C# (csc.exe)
 ├── menu.ps1                  # Menu principal, roteamento e validação de privilégios
 ├── GEMINI.md                 # Guia técnico de contexto para IA (este arquivo)
 ├── README.md                 # Documentação pública do repositório

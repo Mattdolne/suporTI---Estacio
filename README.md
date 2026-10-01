@@ -41,7 +41,9 @@ O projeto adota uma arquitetura modular limpa. O script `menu.ps1` atua como o o
 
 ```text
 📦 suporTI---Estacio
- ┣ 📜 Executar.bat             # Atalho de inicialização rápida com bypass de execution policy
+ ┣ 📜 Executar.bat             # Atalho de inicialização rápida em modo desenvolvimento
+ ┣ 📜 GerarExecutavel.bat      # Automação de compilação do executável de produção (.exe)
+ ┣ 📜 Gerar-Executavel.ps1     # Engine de empacotamento standalone e compilação C# (csc.exe)
  ┣ 📜 menu.ps1                  # Interface CLI interativa, roteador e validação de Admin
  ┣ 📜 GEMINI.md                 # Manual de contexto técnico completo para assistentes de IA
  ┣ 📜 README.md                 # Documentação oficial do projeto
