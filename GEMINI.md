@@ -199,6 +199,15 @@ Ao modificar ou estender a ferramenta `suporTI---Estacio`, siga obrigatoriamente
    * Novas funcionalidades devem ser adicionadas dentro do módulo correspondente (`limpeza.ps1`, `auditoria.ps1`, `manutencao.ps1`) ou em um novo arquivo `.ps1` criado na pasta `funcoes/`.
 4. **Respeito à Codificação de Arquivos**:
    * Salve todos os arquivos de script em codificação **UTF-8 com BOM (or standard UTF-8)** para evitar corrupção de caracteres acentuados ou caracteres de banner ASCII em diferentes builds do Windows.
+5. **Versionamento e Registro de Alterações (Obrigatório)**:
+   * Sempre que qualquer alteração, correção ou nova funcionalidade for implementada no projeto, **É OBRIGATÓRIO** atualizar o número da versão e a data da última alteração seguindo os padrões de Versionamento Semântico (*Semantic Versioning - SemVer*):
+     - **MAJOR** (`X.0.0`): Grandes reestruturações ou mudanças incompatíveis na arquitetura.
+     - **MINOR** (`1.X.0`): Adição de novas funcionalidades, novas opções de menu ou novos módulos.
+     - **PATCH** (`1.0.X`): Correção de bugs, refatoração pontual ou ajustes de texto/interface.
+   * Locais obrigatórios de atualização a cada alteração:
+     1. **`menu.ps1`**: Atualizar os campos `Versao:` e `Data da ultima atualizacao:` na função `Sobre`.
+     2. **`README.md`**: Atualizar a badge de versão (`![Versão]`), o campo `Versão Atual` na seção Sobre e a data no rodapé.
+     3. **`GEMINI.md`**: Atualizar a versão e data no cabeçalho e histórico de contexto.
 
 ---
 
@@ -211,15 +220,15 @@ Se você é um assistente IA ou um novo desenvolvedor assumindo o projeto, siga 
 2. **Ambiente de Teste**:
    * Teste as rotinas em uma Máquina Virtual (VM) Windows 10/11 ou em um ambiente de homologação antes de implantar em laboratórios de produção.
 3. **Adicionando Nova Funcionalidade**:
-   * crie a função no arquivo apropriado em `funcoes/`.
-   * Adicione a validação em `menu.ps1` caso seja um novo módulo.
-   * Atualize as opções de menu numérico correspondentes no bloco `switch`.
-   * Atualize os arquivos `README.md` e `GEMINI.md` documentando as alterações.
+   * Crie a função no arquivo apropriado em `funcoes/`.
+   * Adicione a chamada no menu numérico correspondente em `menu.ps1` ou no módulo específico.
+   * **Incrementar Versão e Data**: Atualize obrigatoriamente o número da versão e a data na tela **Sobre** (`menu.ps1`), no `README.md` e no `GEMINI.md`.
+   * Atualize a documentação em `README.md` e `GEMINI.md` detalhando a alteração.
 4. **Workflow Git**:
    * Valide as alterações localmente.
    * Execute o ciclo de commit com mensagens claras em português:
      ```bash
      git add .
-     git commit -m "feat(modulo): descricao clara da melhoria"
+     git commit -m "feat/fix(modulo): descricao clara da melhoria (vX.X.X)"
      git push origin main
      ```

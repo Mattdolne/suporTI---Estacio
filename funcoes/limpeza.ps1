@@ -409,7 +409,7 @@ function Limpeza {
         Write-Host "3 - Limpeza rapida e desligar"
         Write-Host "4 - Limpeza completa e desligar"
         Write-Host "5 - Limpeza de perfis inativos (>10 dias)"
-        Write-Host "6 - Limpeza de perfis secundarios do Chrome/Edge (Mantem o 1o)"
+        Write-Host "6 - Limpeza de perfis secundarios do Chrome/Edge"
         Write-Host "0 - Voltar"
         Write-Host ""
 

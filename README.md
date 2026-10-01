@@ -2,7 +2,7 @@
 
 ![PowerShell](https://img.shields.io/badge/PowerShell-%3E%3D%205.1-blue?style=for-the-badge&logo=powershell)
 ![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?style=for-the-badge&logo=windows)
-![Versão](https://img.shields.io/badge/Vers%C3%A3o-1.2-green?style=for-the-badge)
+![Versão](https://img.shields.io/badge/Vers%C3%A3o-1.3-green?style=for-the-badge)
 ![Instituição](https://img.shields.io/badge/Est%C3%A1cio-Resende-red?style=for-the-badge)
 ![Licença](https://img.shields.io/badge/Licen%C3%A7a-MIT-orange?style=for-the-badge)
 

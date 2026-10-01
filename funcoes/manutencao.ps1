@@ -412,7 +412,7 @@ function Manutencao {
         Write-Host "7 - Verificacao e correcao de erros de disco"
         Write-Host "8 - Atualizar politicas de grupo - GPOs"
         Write-Host "9 - Instalar RSAT"
-        Write-Host "10 - Redefinir aparencia do Windows para o padrao (Modo claro, mantem plano de fundo)"
+        Write-Host "10 - Redefinir aparencia do Windows para o padrao"
         Write-Host "0 - Voltar"
         Write-Host ""
 

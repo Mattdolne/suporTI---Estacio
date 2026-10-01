@@ -104,8 +104,8 @@ function Sobre {
     
     Write-Host "Desenvolvido por Mattheus Macedo               /\       " -ForegroundColor Cyan
     Write-Host "em Estacio de Sa - Resende                   / || \     " -ForegroundColor Cyan
-    Write-Host "Versao: 1.2                                /___||___\   " -ForegroundColor Cyan
-    Write-Host "Data da ultima atualizacao: 22/04/2026   /     ||     \ " -ForegroundColor Cyan
+    Write-Host "Versao: 1.3                                /___||___\   " -ForegroundColor Cyan
+    Write-Host "Data da ultima atualizacao: 01/10/2026   /     ||     \ " -ForegroundColor Cyan
     Write-Host "                                        ================" -ForegroundColor Cyan
     Write-Host "                                         \     ||     / " -ForegroundColor Cyan
     Write-Host "                                           \___||___/   " -ForegroundColor Cyan
