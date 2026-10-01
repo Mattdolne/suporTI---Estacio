@@ -1,82 +1,183 @@
-# Ferramenta de Suporte TI - Campus Resende
+# 🛠️ Ferramenta de Suporte TI — Campus Resende
 
-![PowerShell](https://img.shields.io/badge/PowerShell-%3E%3D%205.1-blue)
-![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4)
-![Versão](https://img.shields.io/badge/Vers%C3%A3o-1.2-green)
+![PowerShell](https://img.shields.io/badge/PowerShell-%3E%3D%205.1-blue?style=for-the-badge&logo=powershell)
+![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?style=for-the-badge&logo=windows)
+![Versão](https://img.shields.io/badge/Vers%C3%A3o-1.2-green?style=for-the-badge)
+![Instituição](https://img.shields.io/badge/Est%C3%A1cio-Resende-red?style=for-the-badge)
+![Licença](https://img.shields.io/badge/Licen%C3%A7a-MIT-orange?style=for-the-badge)
 
----
-Um canivete suico em PowerShell desenvolvido para otimizar, automatizar e padronizar os atendimentos de suporte tecnico de Nivel 1 no ambiente academico.
-
-## Objetivo
-
-Reduzir o tempo gasto com rotinas repetitivas de troubleshooting, limpeza de disco, coleta de inventario e correcao de sistema operacional, garantindo que os procedimentos sejam executados de forma segura e gerem logs de auditoria.
+Um **canivete suíço modular em PowerShell** desenvolvido para otimizar, automatizar e padronizar as rotinas de suporte técnico de Nível 1 e Nível 2 nos ambientes acadêmicos e administrativos do **Campus Resende (Estácio de Sá)**.
 
 ---
 
-## Estrutura do Projeto
+## 📋 Tabela de Conteúdo
 
-A ferramenta foi construida com uma arquitetura modular. O menu.ps1 atua como o roteador central, carregando as funcoes de scripts isolados na pasta funcoes.
+- [✨ Visão Geral](#-visão-geral)
+- [🏗️ Estrutura do Projeto](#️-estrutura-do-projeto)
+- [⚙️ Módulos e Funcionalidades](#️-módulos-e-funcionalidades)
+  - [🧹 1. Módulo de Limpeza](#-1-módulo-de-limpeza)
+  - [📊 2. Módulo de Auditoria](#-2-módulo-de-auditoria)
+  - [🛠️ 3. Módulo de Manutenção](#-3-módulo-de-manutenção)
+- [🔒 Pré-requisitos e Permissões](#-pré-requisitos-e-permissões)
+- [🚀 Como Executar](#-como-executar)
+- [📝 Logs e Relatórios Gerados](#-logs-e-relatórios-gerados)
+- [⚠️ Avisos de Segurança](#️-avisos-de-segurança)
+- [🤝 Contribuição e Manutenção](#-contribuição-e-manutenção)
+- [👤 Autoria e Créditos](#-autoria-e-créditos)
 
-📦 suporte-ti
- ┣ menu.ps1               # Script principal e menu interativo
- ┗ funcoes
-    ┣ limpeza.ps1         # Modulo de limpeza de disco e cache
-    ┣ auditoria.ps1       # Modulo de coleta de inventario
-    ┗ manutencao.ps1      # Modulo de diagnostico e reparo de SO
+---
 
-## Funcionalidades por Modulo
+## ✨ Visão Geral
 
-1. Limpeza
+Nas operações de suporte de TI em campi universitários, técnicos enfrentam repetidamente demandas como: acúmulo de arquivos temporários em laboratórios, lentidão por excesso de perfis de alunos inativos, diagnóstico de falhas de rede, redefinição de senhas locais e coleta de informações de hardware para inventário.
 
-Foco em liberacao de espaco e privacidade, gerando arquivo de log em C:\registrolimpezapreventiva.txt.
+O **suporTI---Estacio** unifica essas soluções em uma interface de linha de comando (CLI) interativa, rápida e amigável. Ele elimina scripts soltos e comandos manuais, garantindo que o atendimento seja padronizado, seguro e auditável.
 
-    Limpeza Rapida: Esvazia %TEMP%, C:\Windows\Temp e a Lixeira do sistema de forma segura (tratando erros de arquivos em uso).
+---
 
-    Limpeza Completa: Remove os itens da limpeza rapida e varre pastas de perfis de usuario (Downloads, Documents, etc.), respeitando uma whitelist de extensoes no Desktop (.lnk, .url, .website). Limpa tambem o cache do Google Chrome e Microsoft Edge (nao rode em maquina administrativa, pois apaga arquivos de usuarios).
+## 🏗️ Estrutura do Projeto
 
-    Opcoes integradas para desligar a maquina automaticamente apos o termino.
+O projeto adota uma arquitetura modular limpa. O script `menu.ps1` atua como o orquestrador central e carrega dinamicamente as funções isoladas situadas no diretório `funcoes/`.
 
-2. Auditoria
+```text
+📦 suporTI---Estacio
+ ┣ 📜 Executar.bat             # Atalho de inicialização rápida com bypass de execution policy
+ ┣ 📜 menu.ps1                  # Interface CLI interativa, roteador e validação de Admin
+ ┣ 📜 GEMINI.md                 # Manual de contexto técnico completo para assistentes de IA
+ ┣ 📜 README.md                 # Documentação oficial do projeto
+ ┗ 📁 funcoes/
+    ┣ 📜 limpeza.ps1           # Módulo de higienização de disco, lixeira e perfis
+    ┣ 📜 auditoria.ps1         # Módulo de inventário de hardware, rede e SO
+    ┗ 📜 manutencao.ps1        # Módulo de reparo de sistema, diagnóstico de rede e AD
+```
 
-Coleta dados de Hardware, Rede e Sistema Operacional sem depender de ferramentas de terceiros.
+---
 
-    Dados coletados: Hostname, Dominio, Versao/Build do Windows, Data de Formatacao, Serial Number da BIOS, CPU, RAM total, Espaco em Disco (Total/Usado), IP e MAC Address.
+## ⚙️ Módulos e Funcionalidades
 
-    Formatos de Exportacao: 
-    - Visualizacao direta no Terminal.
-    - Exportacao para TXT (Leitura rapida).
-    - Exportacao para CSV (Integracao com Excel/Sistemas de Gestao).
-    - Exportacao para XML (Armazenamento estruturado).
+### 🧹 1. Módulo de Limpeza (`funcoes/limpeza.ps1`)
 
-    Nota: Todos os relatorios recebem carimbo de Data/Hora e sao salvos automaticamente no Desktop do usuario.
+Focado na liberação de espaço em disco e higienização do sistema.
 
-3. Manutencao
+* **Limpeza Rápida**: Esvazia pastas temporárias do usuário (`%TEMP%`), do sistema (`C:\Windows\Temp`), diretórios de cache temporário de todos os usuários (`AppData\Local\Temp`) e esvazia a Lixeira (`C:\$Recycle.Bin`).
+* **Limpeza Completa**: Inclui todos os passos da Limpeza Rápida e realiza a higienização de pastas pessoais (`Documents`, `Downloads`, `Pictures`, `Videos`, `Favorites`, `Links`, `Searches`) de todos os perfis.
+  > 🛡️ **Proteção do Desktop**: Limpa arquivos soltos na Área de Trabalho, mas preserva atalhos (`.lnk`, `.url`, `.website`). Limpa também os caches do Google Chrome e Microsoft Edge.
+* **Limpeza de Perfis Inativos (>10 dias)**: Identifica e remove perfis de usuários locais/domínio não carregados que não registram utilização há mais de 10 dias via CIM (`Win32_UserProfile`), liberando dezenas de gigabytes em computadores de laboratório.
+* **Opções com Desligamento**: Permite agendar o desligamento automático do computador (`shutdown /s /t 5`) imediatamente após a conclusão da limpeza.
 
-Solucao rapida para os problemas mais comuns de infraestrutura e SO.
+---
 
-    Teste de Rede Avancado: Valida conectividade externa (Ping), resolucao DNS, disponibilidade de Portais Institucionais HTTP (SIA e SAVA) e estima a taxa de Download real via CDN (Megabits e Megabytes por segundo).
+### 📊 2. Módulo de Auditoria (`funcoes/auditoria.ps1`)
 
-    Correcao do Sistema: Executa rotina combinada de verificacao de integridade (SFC /scannow) e reparo de imagem (DISM /RestoreHealth).
+Coleta dados completos de hardware, rede e sistema operacional sem necessidade de softwares externos.
 
-    Reset do Windows Update: Para servicos criticos (wuauserv, bits, cryptsvc), limpa o cache corrompido (DataStore e Download) e reinicia os servicos.
+* **Informações Coletadas**:
+  * **Sistema**: Hostname, Domínio, Versão e Build do Windows, Data de Formatação/Instalação.
+  * **Hardware**: Número de Série (BIOS), Processador, Memória RAM Total (GB), Capacidade Total e Espaço Livre do Disco `C:`.
+  * **Rede**: Endereço IP IPv4 e MAC Address.
+* **Formatos de Exportação** (Salvos automaticamente na Área de Trabalho):
+  * 🖥️ **Terminal**: Exibição formatada no próprio console.
+  * 📄 **TXT**: Relatório textual legível (`Auditoria_<HOSTNAME>.txt`).
+  * 📊 **CSV**: Arquivo estruturado separado por `;` e UTF-8 para análise no Excel (`Auditoria_<HOSTNAME>.csv`).
+  * 🧩 **XML**: Exportação de objeto estruturado via `Export-Clixml` (`Auditoria_<HOSTNAME>.xml`).
 
-    Limpeza de Updates Antigos: Limpa instaladores de cache antigos do Windows Update para liberar espaco em disco (pode liberar muito espaco, mas tambem impede rollback de versoes antigas de updates - use com cautela).
+---
 
-    Listar e resetar senha de usuarios locais.
+### 🛠️ 3. Módulo de Manutenção (`funcoes/manutencao.ps1`)
 
-    Reiniciar adaptador de rede.
+Ferramentas avançadas de diagnóstico de rede, restauração de serviços do Windows e administração básica.
 
-    Verificar e corrigir erros de disco.
+1. **Teste de Rede Completo**:
+   * Teste de Conectividade Externa (Ping para `8.8.8.8`).
+   * Teste de Resolução de Nomes (DNS para `google.com`).
+   * Teste HTTP de disponibilidade dos portais institucionais: **SIA**, **SAVA** e **ADP**.
+   * Exibição das interfaces de rede ativas e seus IPs.
+2. **Correção de Erros do Sistema**:
+   * Executa a rotina de verificação de arquivos corrompidos `sfc /scannow`.
+   * Executa a restauração da imagem do Windows `Repair-WindowsImage -Online -RestoreHealth` (DISM).
+3. **Reset do Windows Update**:
+   * Interrompe os serviços `wuauserv`, `bits` e `cryptsvc`, apaga os arquivos de cache de download em `C:\Windows\SoftwareDistribution` e reinicia os serviços.
+4. **Limpeza de Updates Antigos**:
+   * Apaga instaladores de atualizações armazenados no cache para liberar espaço.
+5. **Reset de Senha de Usuário Local**:
+   * Lista usuários cadastrados na máquina (`Get-LocalUser`) e permite redefinir a senha com campo mascarado (`Read-Host -AsSecureString`).
+6. **Reiniciar Adaptador de Rede**:
+   * Lista adaptadores ativos e realiza o ciclo `Disable-NetAdapter` / `Enable-NetAdapter`.
+7. **Verificação e Correção de Disco (`chkdsk`)**:
+   * Leitura rápida em modo somente leitura ou agendamento de verificação profunda no boot (`chkdsk C: /f /r`).
+8. **Atualizar Diretivas de Grupo (GPO)**:
+   * Força a atualização com `gpupdate /force` e valida o canal de confiança no domínio (`Test-ComputerSecureChannel`).
+9. **Instalação do RSAT (Remote Server Administration Tools)**:
+   * Valida se o computador está em domínio (`CORP`/`ACAD`) e instala os módulos de Active Directory e Gerenciamento de GPO via `Add-WindowsCapability`.
 
-    Atualizar e verificar politicas de grupo - GPOs
+---
 
-    Instalar RSAT - Inicia verificação se a máquina está dentro de domínio para prosseguir com a configuração
+## 🔒 Pré-requisitos e Permissões
 
-## Pre-requisitos e Execucao
+* **Sistema Operacional**: Windows 10 ou Windows 11 (64-bit).
+* **PowerShell**: Versão 5.1 ou superior (nativo no Windows 10/11).
+* **Privilégios**: **Administrador**. O script valida automaticamente se a sessão possui elevação de privilégio. Se executado sem Admin, o programa é interrompido por segurança.
 
-    O script foi projetado para rodar nativamente no Windows 10 e Windows 11.
-    E obrigatoria a execucao com Privilegios de Administrador (o proprio script fara a validacao e bloqueara a execucao caso o tecnico nao seja admin).
+---
 
-## Como usar
+## 🚀 Como Executar
 
-Para evitar bloqueios de script, rode como administrador do .bat Executar. Alem de tratar como executavel, este bat roda uma camada adicional de prompt de comando que permite que os scripts .ps1 funcionem sem restricoes comuns.
+### Método Recomendado (Via Script Batch)
+
+1. Faça o download ou clone o repositório em uma pasta local:
+   ```cmd
+   git clone https://github.com/Mattdolne/suporTI---Estacio.git
+   ```
+2. Clique com o **botão direito** no arquivo `Executar.bat` e selecione **"Executar como Administrador"**.
+3. O script irá bypassar a política de execução restrita do PowerShell e abrir o menu principal automaticamente.
+
+### Método Alternativo (Via PowerShell Direct)
+
+1. Abra o PowerShell como **Administrador**.
+2. Navegue até a pasta do projeto:
+   ```powershell
+   cd "C:\caminho\para\suporTI---Estacio"
+   ```
+3. Execute o script definindo a política de execução para a sessão:
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File .\menu.ps1
+   ```
+
+---
+
+## 📝 Logs e Relatórios Gerados
+
+| Arquivo / Destino | Módulo Gerador | Descrição |
+| :--- | :--- | :--- |
+| `C:\registrolimpezapreventiva.txt` | Limpeza | Registro detalhado de cada arquivo/pasta limpa, quantidade de itens e megabytes liberados. |
+| `Desktop\Auditoria_<HOSTNAME>.csv` | Auditoria | Relatório estruturado em CSV (delimitado por `;`) contendo dados de hardware, rede e SO. |
+| `Desktop\Auditoria_<HOSTNAME>.xml` | Auditoria | Objeto de inventário exportado em formato XML. |
+| `Desktop\Auditoria_<HOSTNAME>.txt` | Auditoria | Relatório legível em texto simples. |
+
+---
+
+## ⚠️ Avisos de Segurança
+
+* **Limpeza Completa**: Apaga arquivos pessoais nas pastas padrão de usuário (`Downloads`, `Documents`, etc.). **Não execute em máquinas administrativas sem backup prévio.**
+* **Limpeza de Perfis Inativos**: Apaga permanentemente pastas de perfis de usuário inativos há mais de 10 dias. Certifique-se de que nenhum dado crítico esteja armazenado localmente nestes perfis.
+* **Limpeza de Cache do Windows Update**: Impede a realização de *rollback* (desinstalação) de atualizações instaladas recentemente.
+
+---
+
+## 🤝 Contribuição e Manutenção
+
+Para contribuir com o projeto ou adaptar para a sua unidade:
+
+1. Consulte o guia técnico avançado em [`GEMINI.md`](GEMINI.md).
+2. Adicione novas funções nos scripts dentro da pasta `funcoes/`.
+3. Mantenha os padrões de nomenclatura PowerShell (ex: `Verbo-Substantivo`) e tratamento de exceções com `try/catch`.
+4. Garanta a codificação UTF-8 nos arquivos editados.
+
+---
+
+## 👤 Autoria e Créditos
+
+* **Desenvolvedor**: Mattheus Macedo
+* **Unidade**: Estácio de Sá — Campus Resende
+* **Frase**: *"Educar para Transformar!"*
+* **Licença**: Este projeto é distribuído sob a licença MIT. Sinta-se à vontade para utilizar, modificar e distribuir.
