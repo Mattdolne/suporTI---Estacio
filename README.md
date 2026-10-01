@@ -110,6 +110,9 @@ Ferramentas avançadas de diagnóstico de rede, restauração de serviços do Wi
    * Força a atualização com `gpupdate /force` e valida o canal de confiança no domínio (`Test-ComputerSecureChannel`).
 9. **Instalação do RSAT (Remote Server Administration Tools)**:
    * Valida se o computador está em domínio (`CORP`/`ACAD`) e instala os módulos de Active Directory e Gerenciamento de GPO via `Add-WindowsCapability`.
+10. **Redefinir Aparência do Windows para o Padrão**:
+   * Restaura o tema original do Windows (Modo Claro para sistema e apps, barra de tarefas com layout padrão, cores de destaque nativas e transparência).
+   * **Preserva o plano de fundo/wallpaper** do usuário sem alterações.
 
 ---
 

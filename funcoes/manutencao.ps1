@@ -326,7 +326,74 @@ function Instalar-RSAT {
     Write-Host "`nInstalacao concluida! Verifique o Menu Iniciar em 'Ferramentas Administrativas'." -ForegroundColor Green
     Write-Host "`nSe nao encontrar o gerenciador de servidores, reinicie a maquina e procure novamente." -ForegroundColor Green
     Pause
+}
 
+# ==========================================
+# RESETAR APARENCIA E TEMA PARA O PADRAO
+# ==========================================
+function Resetar-AparenciaPadrao {
+    Clear-Host
+    Write-Host "===== RESETAR APARENCIA PARA O PADRAO =====" -ForegroundColor Cyan
+    Write-Host "Esta opcao restaura as configuracoes visuais originais do Windows:"
+    Write-Host " - Modo Claro (Aplicativos e Sistema)"
+    Write-Host " - Barra de Tarefas (Icones, alinhamento e organizacao padrao)"
+    Write-Host " - Cores de Destaque e Efeitos de Transparencia originais"
+    Write-Host " - MANTEM O PLANO DE FUNDO (WALLPAPER) INTACTO."
+    Write-Host ""
+
+    $confirmacao = Read-Host "Deseja continuar? (S/N)"
+    if ($confirmacao -ne "S") {
+        Write-Host "Cancelado."
+        return
+    }
+
+    Write-Host "`nAplicando configuracoes de aparencia padrao..." -ForegroundColor Yellow
+
+    try {
+        # 1. Modo Claro (System & Apps) e Transparencia
+        $personalizePath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"
+        if (-not (Test-Path $personalizePath)) { New-Item -Path $personalizePath -Force | Out-Null }
+        
+        Set-ItemProperty -Path $personalizePath -Name "AppsUseLightTheme" -Value 1 -Type DWord -ErrorAction SilentlyContinue
+        Set-ItemProperty -Path $personalizePath -Name "SystemUsesLightTheme" -Value 1 -Type DWord -ErrorAction SilentlyContinue
+        Set-ItemProperty -Path $personalizePath -Name "ColorPrevalence" -Value 0 -Type DWord -ErrorAction SilentlyContinue
+        Set-ItemProperty -Path $personalizePath -Name "EnableTransparency" -Value 1 -Type DWord -ErrorAction SilentlyContinue
+
+        # 2. DWM (Desktop Window Manager) - Cores de destaque padrao
+        $dwmPath = "HKCU:\Software\Microsoft\Windows\DWM"
+        if (-not (Test-Path $dwmPath)) { New-Item -Path $dwmPath -Force | Out-Null }
+
+        Set-ItemProperty -Path $dwmPath -Name "ColorPrevalence" -Value 0 -Type DWord -ErrorAction SilentlyContinue
+        Set-ItemProperty -Path $dwmPath -Name "AutoColorization" -Value 0 -Type DWord -ErrorAction SilentlyContinue
+        Set-ItemProperty -Path $dwmPath -Name "AccentColor" -Value 0xffd8a100 -Type DWord -ErrorAction SilentlyContinue
+
+        # 3. Configuracoes Avancadas do Explorer / Barra de Tarefas
+        $advancedPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"
+        if (-not (Test-Path $advancedPath)) { New-Item -Path $advancedPath -Force | Out-Null }
+
+        Set-ItemProperty -Path $advancedPath -Name "TaskbarSmallIcons" -Value 0 -Type DWord -ErrorAction SilentlyContinue
+        Set-ItemProperty -Path $advancedPath -Name "TaskbarGlomLevel" -Value 0 -Type DWord -ErrorAction SilentlyContinue
+        Set-ItemProperty -Path $advancedPath -Name "TaskbarSizeMove" -Value 1 -Type DWord -ErrorAction SilentlyContinue
+        Set-ItemProperty -Path $advancedPath -Name "ShowTaskViewButton" -Value 1 -Type DWord -ErrorAction SilentlyContinue
+        Set-ItemProperty -Path $advancedPath -Name "TaskbarAnimations" -Value 1 -Type DWord -ErrorAction SilentlyContinue
+        Set-ItemProperty -Path $advancedPath -Name "SearchboxTaskbarMode" -Value 2 -Type DWord -ErrorAction SilentlyContinue
+
+        # 4. Reiniciar o Windows Explorer para aplicar as mudancas visualmente
+        Write-Host "Reiniciando o Windows Explorer para aplicar o tema padrao..." -ForegroundColor Yellow
+        Stop-Process -Name "explorer" -Force -ErrorAction SilentlyContinue
+        Start-Sleep -Seconds 1
+        if (-not (Get-Process "explorer" -ErrorAction SilentlyContinue)) {
+            Start-Process "explorer.exe"
+        }
+
+        Write-Host "`n[OK] Aparencia padrao restaurada com sucesso (Modo claro ativo, wallpaper mantido)." -ForegroundColor Green
+    }
+    catch {
+        Write-Host "`n[ERRO] Falha ao redefinir aparencia: $($_.Exception.Message)" -ForegroundColor Red
+    }
+
+    Write-Host ""
+    Pause
 }
 
 # ================================
@@ -345,6 +412,7 @@ function Manutencao {
         Write-Host "7 - Verificacao e correcao de erros de disco"
         Write-Host "8 - Atualizar politicas de grupo - GPOs"
         Write-Host "9 - Instalar RSAT"
+        Write-Host "10 - Redefinir aparencia do Windows para o padrao (Modo claro, mantem plano de fundo)"
         Write-Host "0 - Voltar"
         Write-Host ""
 
@@ -361,6 +429,7 @@ function Manutencao {
                 "7" { Verificar-Disco }
                 "8" { Atualizar-GPOs }
                 "9" { Instalar-RSAT }
+                "10" { Resetar-AparenciaPadrao }
                 "0" { return }
                 default { Write-Host "Opcao invalida" -ForegroundColor Yellow; Pause }
             }

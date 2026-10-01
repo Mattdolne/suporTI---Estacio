@@ -162,6 +162,10 @@ Concentra as ferramentas de diagnósticos avançados de rede, reparos do SO e ut
 9. `Instalar-RSAT`:
    * Valida se a máquina pertence a um domínio (`Win32_ComputerSystem.PartOfDomain`).
    * Instala as ferramentas do Active Directory (`Rsat.ActiveDirectory.DS-LDS.Tools`) e Gerenciador de GPO (`Rsat.GroupPolicy.Management.Tools`) via `Add-WindowsCapability`.
+10. `Resetar-AparenciaPadrao`:
+   * Redefine as configurações visuais do Windows para os padrões originais (Modo Claro de sistema e aplicativos, barra de tarefas com ícones e busca padrão, cores de destaque nativas e transparência).
+   * **Preservação**: Preserva intacto o plano de fundo/wallpaper definido pelo usuário.
+   * Reinicia o `explorer.exe` para aplicar as modificações visuais em tempo real.
 
 ---
 
