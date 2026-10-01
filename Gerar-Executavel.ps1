@@ -32,7 +32,7 @@ $menuCodeClean
 "@
 
 Write-Host "2. Gerando codificacao Base64 do payload..." -ForegroundColor Cyan
-$scriptBytes = [System.Text.Encoding]::Unicode.GetBytes($bundledScript)
+$scriptBytes = [System.Text.Encoding]::UTF8.GetBytes($bundledScript)
 $base64Payload = [System.Convert]::ToBase64String($scriptBytes)
 
 Write-Host "3. Preparando codigo C# com Manifesto de Administrador..." -ForegroundColor Cyan
@@ -48,7 +48,7 @@ $manifestPath = Join-Path $buildDir "app.manifest"
 $manifestContent = @"
 <?xml version="1.0" encoding="utf-8"?>
 <assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
-  <assemblyIdentity version="1.3.0.0" name="suporTI-Estacio"/>
+  <assemblyIdentity version="1.3.1.0" name="suporTI-Estacio"/>
   <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
     <security>
       <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
@@ -61,10 +61,11 @@ $manifestContent = @"
 
 Set-Content -Path $manifestPath -Value $manifestContent -Encoding UTF8
 
-# Codigo C# Wrapper
+# Codigo C# Wrapper (Descompacta o script em arquivo temporario em %TEMP% para contornar o limite de tamanho da linha de comando do Windows)
 $csContent = @"
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 
 namespace SuporTIEstacio
@@ -73,15 +74,20 @@ namespace SuporTIEstacio
     {
         static void Main(string[] args)
         {
-            string payload = "$base64Payload";
-            
-            ProcessStartInfo psi = new ProcessStartInfo();
-            psi.FileName = "powershell.exe";
-            psi.Arguments = "-NoProfile -ExecutionPolicy Bypass -EncodedCommand " + payload;
-            psi.UseShellExecute = false;
+            string base64Payload = "$base64Payload";
+            string tempPs1Path = Path.Combine(Path.GetTempPath(), "suporTI_" + Guid.NewGuid().ToString("N") + ".ps1");
 
             try
             {
+                byte[] scriptBytes = Convert.FromBase64String(base64Payload);
+                string scriptContent = Encoding.UTF8.GetString(scriptBytes);
+                File.WriteAllText(tempPs1Path, scriptContent, Encoding.UTF8);
+
+                ProcessStartInfo psi = new ProcessStartInfo();
+                psi.FileName = "powershell.exe";
+                psi.Arguments = "-NoProfile -ExecutionPolicy Bypass -File \"" + tempPs1Path + "\"";
+                psi.UseShellExecute = false;
+
                 Process proc = Process.Start(psi);
                 if (proc != null)
                 {
@@ -92,6 +98,13 @@ namespace SuporTIEstacio
             {
                 Console.WriteLine("Erro ao iniciar a ferramenta de suporte: " + ex.Message);
                 Console.ReadLine();
+            }
+            finally
+            {
+                if (File.Exists(tempPs1Path))
+                {
+                    try { File.Delete(tempPs1Path); } catch {}
+                }
             }
         }
     }
@@ -120,5 +133,5 @@ if ($process.ExitCode -eq 0 -and (Test-Path $outputExe)) {
     Write-Host "`n[ERRO] Falha ao compilar o executavel." -ForegroundColor Red
 }
 
-# Limpeza dos arquivos temporarios
+# Limpeza dos arquivos temporarios de build
 Remove-Item $buildDir -Recurse -Force -ErrorAction SilentlyContinue
